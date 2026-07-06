@@ -28,7 +28,7 @@ export function LoginForm({
   const onSubmit = handleSubmit(async (data) => {
     try {
       await login.mutateAsync(data);
-      router.replace("/dashboard");
+      router.replace("/panel");
     } catch (err) {
       toast.error(getErrorMessage(err));
     }

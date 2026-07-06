@@ -1,4 +1,5 @@
-import axios from "axios";
+import { authRepository } from "@/modules/auth/auth_module";
+import axios, { AxiosError } from "axios";
 
 class NetworkApi {
   public client = axios.create({
@@ -8,6 +9,34 @@ class NetworkApi {
     },
     withCredentials: true,
   });
+
+  public constructor() {
+    this.setInterceptors();
+  }
+
+  private setInterceptors() {
+    this.client.interceptors.response.use(
+      (res) => res,
+      async (error) => {
+        if (!(error instanceof AxiosError)) return Promise.reject(error);
+
+        const unauthorizedRegex =
+          /^\/auth\/(refresh-token|login|register|forgot-password|reset-password)/gi;
+        const isAuthorizedPath = !unauthorizedRegex.test(
+          error.config?.url || "",
+        );
+
+        if (!isAuthorizedPath) return Promise.reject(error);
+
+        const {
+          data: { accessToken },
+        } = await authRepository.refreshToken();
+        api.setToken(accessToken);
+
+        return this.client.request(error.config || {});
+      },
+    );
+  }
 
   public setToken(token: string) {
     this.client.defaults.headers.common["Authorization"] = `Bearer ${token}`;

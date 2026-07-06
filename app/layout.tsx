@@ -38,9 +38,9 @@ export default function RootLayout({
         inter.variable,
       )}
     >
-      <AppProvider>
-        <body className="min-h-full flex flex-col">{children}</body>
-      </AppProvider>
+      <body className="min-h-full">
+        <AppProvider>{children}</AppProvider>
+      </body>
     </html>
   );
 }
