@@ -33,7 +33,10 @@ export default function FormControl<T extends FieldValues>({
       control={control}
       name={name}
       render={({ fieldState, field, formState }) => (
-        <Field data-invalid={fieldState.invalid}>
+        <Field
+          data-invalid={fieldState.invalid}
+          className="flex flex-col gap-1.5"
+        >
           {label && <FieldLabel htmlFor={labelHtmlFor}>{label}</FieldLabel>}
           {render({ fieldState, field, formState })}
           {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
