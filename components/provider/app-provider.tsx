@@ -8,6 +8,7 @@ import { useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import AuthProvider from "./auth-provider";
 import { useAuth } from "@/modules/auth/context/auth-context";
+import { TooltipProvider } from "../ui/tooltip";
 
 interface Props {
   children: React.ReactNode;
@@ -55,8 +56,10 @@ export default function AppProvider({ children }: Props) {
   return (
     <QueryProvider>
       <AuthProvider>
-        <AppProviderContent>{children}</AppProviderContent>
-        <Toaster />
+        <TooltipProvider>
+          <AppProviderContent>{children}</AppProviderContent>
+          <Toaster />
+        </TooltipProvider>
       </AuthProvider>
     </QueryProvider>
   );
