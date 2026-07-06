@@ -9,6 +9,7 @@ import { usePathname, useRouter } from "next/navigation";
 import AuthProvider from "./auth-provider";
 import { useAuth } from "@/modules/auth/context/auth-context";
 import { TooltipProvider } from "../ui/tooltip";
+import { ThemeProvider } from "next-themes";
 
 interface Props {
   children: React.ReactNode;
@@ -54,13 +55,15 @@ function AppProviderContent({ children }: Props) {
 
 export default function AppProvider({ children }: Props) {
   return (
-    <QueryProvider>
-      <AuthProvider>
-        <TooltipProvider>
-          <AppProviderContent>{children}</AppProviderContent>
-          <Toaster />
-        </TooltipProvider>
-      </AuthProvider>
-    </QueryProvider>
+    <ThemeProvider attribute="class">
+      <QueryProvider>
+        <AuthProvider>
+          <TooltipProvider>
+            <AppProviderContent>{children}</AppProviderContent>
+            <Toaster />
+          </TooltipProvider>
+        </AuthProvider>
+      </QueryProvider>
+    </ThemeProvider>
   );
 }
