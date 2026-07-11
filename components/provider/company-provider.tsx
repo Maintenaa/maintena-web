@@ -29,8 +29,13 @@ export default function CompanyProvider({
 
   function handleSetCompany(company: Company | null) {
     if (!!company) {
-      const normalizedPath = path.replace(/\/.{8}(-.{4}){3}-.{12}/, "");
-      router.push(`/${company.id}${normalizedPath}`);
+      const idRegex = /\/.{8}(-.{4}){3}-.{12}/;
+      if (idRegex.test(path) || path == "/") {
+        const normalizedPath = path.replace(idRegex, "");
+        router.replace(`/${company.id}${normalizedPath}`);
+      } else {
+        router.replace(`/${company.id}`);
+      }
     }
 
     if (!company?.id) {
