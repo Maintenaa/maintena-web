@@ -37,7 +37,22 @@ export default function PanelContent({ children, breadcrumbs }: Props) {
           <ThemeToggler />
         </div>
       </header>
-      <div className="p-4 pt-0">{children}</div>
+      <div className="lg:p-5 p-4 pt-0!">{children}</div>
     </>
+  );
+}
+
+export function PanelContentHeader({
+  title,
+  action,
+}: {
+  title: string;
+  action?: React.ReactNode;
+}) {
+  return (
+    <div className="flex items-center justify-between gap-4 mb-5">
+      <h1 className="text-2xl font-semibold">{title}</h1>
+      {action}
+    </div>
   );
 }

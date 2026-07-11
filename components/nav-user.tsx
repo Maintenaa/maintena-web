@@ -7,9 +7,9 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { useAuth } from "@/modules/auth/context/auth-context";
 import { ChevronsUpDownIcon } from "lucide-react";
 import UserDropdown from "./user-dropdown";
+import { useAuth } from "@/modules/auth/context/auth-context";
 
 export function NavUser() {
   const { user } = useAuth();

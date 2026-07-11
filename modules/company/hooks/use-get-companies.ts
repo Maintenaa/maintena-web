@@ -1,4 +1,4 @@
-import { useDebouncedState } from "@/modules/shared/hooks/use-debounced-state";
+import { useDebouncedState } from "@/modules/shared/hook/use-debounced-state";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { companyRepository } from "../company-module";

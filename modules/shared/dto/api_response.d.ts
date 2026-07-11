@@ -9,6 +9,6 @@ export interface PaginatedApiResponse<T extends object> extends ApiResponse<T> {
     perPage: number;
     currentPage: number;
     totalPage: number;
-    totalRecord: number;
+    totalCount: number;
   };
 }
