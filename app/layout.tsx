@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import AppProvider from "@/components/provider/app-provider";
 import { getMetaTitle } from "@/lib/metas";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
+const inter = Geist({ subsets: ["latin"], variable: "--font-sans" });
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
