@@ -4,7 +4,11 @@ import { ThemeToggler } from "@/components/theme-toggler";
 import { GalleryVerticalEndIcon } from "lucide-react";
 import Link from "next/link";
 
-export function AuthContent({ children }: { children: React.ReactNode }) {
+export default function AuthLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <div className="grid min-h-svh bg-background">
       <div className="flex flex-col gap-4 p-6 md:p-10">

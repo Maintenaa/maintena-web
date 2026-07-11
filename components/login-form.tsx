@@ -1,8 +1,9 @@
+"use client";
+
 import { cn, getErrorMessage } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Field, FieldGroup } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { useLoginForm } from "@/modules/auth/hooks/use-login-form";
 import FormControl from "./form/form-control";
 import { useState } from "react";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
@@ -10,21 +11,30 @@ import { useLogin } from "@/modules/auth/hooks/use-login";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useQueryClient } from "@tanstack/react-query";
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"form">) {
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const [showPassword, setShowPassword] = useState(false);
-  const { mutation: login } = useLogin();
-  const { control, handleSubmit } = useLoginForm();
+  const {
+    mutation: login,
+    form: { handleSubmit, control },
+  } = useLogin();
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      await login.mutateAsync(data);
-      router.replace("/panel");
+      await login.mutateAsync(data, {
+        onSuccess() {
+          queryClient.invalidateQueries({ queryKey: ["get-profile"] });
+          queryClient.invalidateQueries({ queryKey: ["companies"] });
+        },
+      });
+      router.replace("/");
     } catch (err) {
       toast.error(getErrorMessage(err));
     }

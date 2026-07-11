@@ -8,17 +8,17 @@ export default class AuthRepository {
     email,
     password,
   }: LoginParams): Promise<ApiResponse<LoginResponse>> {
-    const { data } = await api.client.post("/auth/login", { email, password });
+    const { data } = await api.client.post("/login", { email, password });
     return data;
   }
 
   async refreshToken(): Promise<ApiResponse<LoginResponse>> {
-    const { data } = await api.client.post("/auth/refresh-token");
+    const { data } = await api.client.post("/refresh-token");
     return data;
   }
 
   async getProfile(): Promise<ApiResponse<User>> {
-    const { data } = await api.client.get("/auth/profile");
+    const { data } = await api.client.get("/profile");
     return data;
   }
 }

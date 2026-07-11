@@ -1,4 +1,4 @@
-import { authRepository } from "@/modules/auth/auth_module";
+import { authRepository } from "@/modules/auth/auth-module";
 import axios, { AxiosError } from "axios";
 
 class NetworkApi {
@@ -15,10 +15,15 @@ class NetworkApi {
   }
 
   private setInterceptors() {
+    let alreadyRefreshing = false;
+
     this.client.interceptors.response.use(
       (res) => res,
       async (error) => {
+        if (alreadyRefreshing) return Promise.reject(error);
         if (!(error instanceof AxiosError)) return Promise.reject(error);
+
+        alreadyRefreshing = true;
 
         const unauthorizedRegex =
           /^\/auth\/(refresh-token|login|register|forgot-password|reset-password)/gi;

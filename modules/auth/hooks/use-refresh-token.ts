@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { authRepository } from "../auth_module";
+import { authRepository } from "../auth-module";
 import { api } from "@/network/api";
 
 export function useRefreshToken() {
