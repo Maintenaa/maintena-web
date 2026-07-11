@@ -110,7 +110,7 @@ export function AppTableActions({ actions }: AppTableActionProps) {
           <MoreVerticalIcon className="size-4" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent>
+      <DropdownMenuContent align="end">
         {actions.map((action, i) => (
           <DropdownMenuItem
             key={i}

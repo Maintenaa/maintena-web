@@ -20,6 +20,10 @@ import { panelUrl } from "@/lib/panels";
 import { AppFilter } from "@/components/app/app-filter";
 import AppPaginator from "@/components/app/app-paginator";
 import { StatusBadge, PriorityBadge } from "@/components/app/status-badge";
+import { useGetAssetCategories } from "@/modules/asset/hook/use-get-asset-categories";
+import { CategorySelect } from "@/components/app/category-select";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
 
 export default function AssetList() {
   const { currentCompany } = useCompany();
@@ -27,6 +31,12 @@ export default function AssetList() {
   const {
     query: { data },
   } = useGetAssets({
+    companyId: currentCompany?.id,
+    enabled: !!currentCompany?.id,
+  });
+  const {
+    query: { data: categoriesData },
+  } = useGetAssetCategories({
     companyId: currentCompany?.id,
     enabled: !!currentCompany?.id,
   });
@@ -82,22 +92,14 @@ export default function AssetList() {
         header: "Manufacturer",
         cell: (info) => {
           const val = info.getValue();
-          return (
-            <span className="text-muted-foreground">
-              {val || "-"}
-            </span>
-          );
+          return <span className="text-muted-foreground">{val || "-"}</span>;
         },
       }),
       columnHelper.accessor("model", {
         header: "Model",
         cell: (info) => {
           const val = info.getValue();
-          return (
-            <span className="text-muted-foreground">
-              {val || "-"}
-            </span>
-          );
+          return <span className="text-muted-foreground">{val || "-"}</span>;
         },
       }),
       columnHelper.accessor("id", {
@@ -161,6 +163,31 @@ export default function AssetList() {
         perPage={perPage}
         setPerPage={setPerPage}
         searchPlaceholder="Search assets by name or code..."
+        other={
+          <div className="space-y-3">
+            <div className="space-y-2">
+              <Label>Priority</Label>
+              <CategorySelect
+                items={["Critical", "High", "Medium", "Low"]}
+                render={(item) => <span>{item}</span>}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Category</Label>
+              <CategorySelect
+                items={categoriesData?.data || []}
+                itemToStringValue={(item) => item.name}
+                render={(item) => <span>{item.name}</span>}
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-2 pt-2">
+              <Button type="button" variant="secondary">
+                Reset
+              </Button>
+              <Button type="button">Filter</Button>
+            </div>
+          </div>
+        }
       />
       <AppTable table={table} />
       <AppPaginator

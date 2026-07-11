@@ -1,4 +1,4 @@
-import { SearchIcon } from "lucide-react";
+import { FilterIcon, SearchIcon } from "lucide-react";
 import { Input } from "../ui/input";
 import {
   Select,
@@ -7,6 +7,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { Button } from "../ui/button";
 
 export function AppFilter({
   searchPlaceholder,
@@ -15,6 +17,7 @@ export function AppFilter({
   perPages = [10, 25, 50, 100],
   perPage,
   setPerPage,
+  other,
 }: {
   searchPlaceholder?: string;
   search?: string;
@@ -22,10 +25,11 @@ export function AppFilter({
   perPages?: number[];
   perPage?: number;
   setPerPage?: (perPage: number) => void;
+  other?: React.ReactNode;
 }) {
   return (
-    <div className="flex items-center justify-between gap-3">
-      <div className="flex-1 min-w-0">
+    <div className="flex items-center flex-wrap gap-3">
+      <div className="lg:flex-1 w-full min-w-0">
         <div className="relative">
           <Input
             className="pl-10"
@@ -40,13 +44,14 @@ export function AppFilter({
           </div>
         </div>
       </div>
+
       <Select
         value={perPage?.toString()}
         onValueChange={(value) => {
           if (setPerPage) setPerPage(Number(value));
         }}
       >
-        <SelectTrigger className="w-40">
+        <SelectTrigger className="w-32">
           <SelectValue placeholder="Limit Per Page" />
         </SelectTrigger>
         <SelectContent>
@@ -57,6 +62,20 @@ export function AppFilter({
           ))}
         </SelectContent>
       </Select>
+
+      {other && (
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button variant="outline" type="button">
+              <FilterIcon className="size-4" />
+              Filter Data
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent align="end" className="w-80 max-w-full p-3">
+            {other}
+          </PopoverContent>
+        </Popover>
+      )}
     </div>
   );
 }

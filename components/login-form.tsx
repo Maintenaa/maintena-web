@@ -7,11 +7,11 @@ import { Input } from "@/components/ui/input";
 import FormControl from "./form/form-control";
 import { useState } from "react";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
-import { useLogin } from "@/app/(auth)/_hooks/use-login";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useQueryClient } from "@tanstack/react-query";
+import { useLogin } from "@/modules/auth/hooks/use-login";
 
 export function LoginForm({
   className,
