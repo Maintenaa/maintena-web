@@ -2,9 +2,9 @@
 
 import { useCompany } from "@/modules/company/context/company-context";
 import {
-  useGetLocationFilter,
-  useGetLocations,
-} from "../../../modules/location/hook/use-get-locations";
+  useGetPartFilter,
+  useGetParts,
+} from "@/modules/part/hook/use-get-parts";
 import { AppTable, AppTableActions } from "@/components/app/app-table";
 import { useMemo } from "react";
 import {
@@ -14,21 +14,22 @@ import {
   PaginationState,
   useReactTable,
 } from "@tanstack/react-table";
-import { Location } from "@/modules/location/dto/location";
+import { Part } from "@/modules/part/dto/part";
 import { PenIcon, Trash2Icon } from "lucide-react";
 import { panelUrl } from "@/lib/panels";
 import { AppFilter } from "@/components/app/app-filter";
 import AppPaginator from "@/components/app/app-paginator";
 
-export default function LocationList() {
+export default function PartList() {
   const { currentCompany } = useCompany();
 
   const {
     query: { data },
-  } = useGetLocations({
+  } = useGetParts({
     companyId: currentCompany?.id,
     enabled: !!currentCompany?.id,
   });
+
   const {
     search,
     debouncedSearch,
@@ -37,7 +38,8 @@ export default function LocationList() {
     setSearch,
     setPage,
     setPerPage,
-  } = useGetLocationFilter();
+  } = useGetPartFilter();
+
   const pagination = useMemo<PaginationState>(() => {
     return {
       pageSize: perPage,
@@ -46,7 +48,7 @@ export default function LocationList() {
   }, [page, perPage]);
 
   const columns = useMemo(() => {
-    const columnHelper = createColumnHelper<Location>();
+    const columnHelper = createColumnHelper<Part>();
 
     return [
       columnHelper.accessor("id", {
@@ -55,9 +57,46 @@ export default function LocationList() {
           <span className="text-muted-foreground">{info.row.index + 1}</span>
         ),
       }),
+      columnHelper.accessor("code", {
+        header: "Code",
+        cell: (info) => (
+          <span className="font-medium text-muted-foreground">
+            {info.getValue()}
+          </span>
+        ),
+      }),
       columnHelper.accessor("name", {
         header: "Name",
         cell: (info) => <span className="text-medium">{info.getValue()}</span>,
+      }),
+      columnHelper.accessor("quantity", {
+        header: "Qty",
+        cell: (info) => (
+          <span>
+            {info.getValue()} {info.row.original.unit}
+          </span>
+        ),
+      }),
+      columnHelper.accessor("cost", {
+        header: "Cost",
+        cell: (info) => <span>{info.getValue().toLocaleString("id-ID")}</span>,
+      }),
+      columnHelper.accessor("expirationDate", {
+        header: "Expiration",
+        cell: (info) => {
+          const val = info.getValue();
+          return (
+            <span className="text-muted-foreground">
+              {val
+                ? new Date(val).toLocaleDateString("id-ID", {
+                    day: "2-digit",
+                    month: "short",
+                    year: "numeric",
+                  })
+                : "-"}
+            </span>
+          );
+        },
       }),
       columnHelper.accessor("id", {
         id: "actions",
@@ -72,13 +111,13 @@ export default function LocationList() {
                 {
                   label: "Edit",
                   icon: PenIcon,
-                  url: panelUrl(`/locations/${info.row.original.id}/edit`),
+                  url: panelUrl(`/parts/${info.row.original.id}/edit`),
                 },
                 {
                   label: "Delete",
                   icon: Trash2Icon,
                   onClick: () => {
-                    console.log("dete");
+                    console.log("delete");
                   },
                   variant: "destructive",
                 },
@@ -92,8 +131,10 @@ export default function LocationList() {
 
   const filteredData = useMemo(() => {
     return (
-      data?.data.filter((d) =>
-        d.name.toLowerCase().includes(debouncedSearch?.toLowerCase() || ""),
+      data?.data.filter(
+        (d) =>
+          d.name.toLowerCase().includes(debouncedSearch?.toLowerCase() || "") ||
+          d.code.toLowerCase().includes(debouncedSearch?.toLowerCase() || ""),
       ) || []
     );
   }, [debouncedSearch, data?.data]);
@@ -117,7 +158,7 @@ export default function LocationList() {
         setSearch={setSearch}
         perPage={perPage}
         setPerPage={setPerPage}
-        searchPlaceholder="Search locations..."
+        searchPlaceholder="Search parts by name or code..."
       />
       <AppTable table={table} />
       <AppPaginator
