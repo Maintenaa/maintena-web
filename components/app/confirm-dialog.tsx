@@ -8,11 +8,13 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
+  AlertDialogTrigger,
 } from "../ui/alert-dialog";
 
 export interface AlertConfirmDialogProps extends AlertDialogRootProps {
   title: string;
   description: string;
+  trigger?: React.ReactNode;
   onConfirm: () => void;
   confirmText?: string;
   confirmVariant?:
@@ -28,6 +30,7 @@ export function AlertConfirmDialog(props: AlertConfirmDialogProps) {
   const {
     title,
     description,
+    trigger,
     onConfirm,
     confirmText,
     confirmVariant,
@@ -37,6 +40,7 @@ export function AlertConfirmDialog(props: AlertConfirmDialogProps) {
   return (
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     <AlertDialog {...(other as any)}>
+      {trigger && <AlertDialogTrigger asChild>{trigger}</AlertDialogTrigger>}
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>{title}</AlertDialogTitle>

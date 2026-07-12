@@ -18,6 +18,7 @@ import {
   UsersIcon,
   BadgeCheckIcon,
   FlagIcon,
+  BotIcon,
 } from "lucide-react";
 import { CompanySwitcher } from "./company-switcher";
 import { useCompany } from "@/modules/company/context/company-context";
@@ -126,6 +127,17 @@ export function PanelSidebar({
             url: panelUrl("/positions"),
             isActive: match("/positions*"),
             icon: BadgeCheckIcon,
+          },
+        ],
+      },
+      {
+        label: "AI",
+        items: [
+          {
+            title: "AI Assistant",
+            url: panelUrl("/assistant"),
+            icon: BotIcon,
+            isActive: match("/assistant*"),
           },
         ],
       },

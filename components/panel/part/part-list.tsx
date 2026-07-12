@@ -1,12 +1,7 @@
 "use client";
 
-import { useCompany } from "@/modules/company/context/company-context";
-import {
-  useGetPartFilter,
-  useGetParts,
-} from "@/modules/part/hook/use-get-parts";
 import { AppTable, AppTableActions } from "@/components/app/app-table";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   createColumnHelper,
   getCoreRowModel,
@@ -17,34 +12,30 @@ import {
 import { Part } from "@/modules/part/dto/part";
 import { PenIcon, Trash2Icon } from "lucide-react";
 import { panelUrl } from "@/lib/panels";
-import { AppFilter } from "@/components/app/app-filter";
 import AppPaginator from "@/components/app/app-paginator";
 
-export default function PartList() {
-  const { currentCompany } = useCompany();
+export interface PartListProps {
+  data: Part[];
+  onDelete: (part: Part) => void;
+  page?: number;
+  perPage?: number;
+  onPageChange?: (page: number) => void;
+}
 
-  const {
-    query: { data },
-  } = useGetParts({
-    companyId: currentCompany?.id,
-    enabled: !!currentCompany?.id,
+export default function PartList({
+  data,
+  onDelete,
+  perPage = 10,
+  page = 1,
+  onPageChange,
+}: PartListProps) {
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageSize: perPage,
+    pageIndex: page - 1,
   });
 
-  const {
-    search,
-    debouncedSearch,
-    page,
-    perPage,
-    setSearch,
-    setPage,
-    setPerPage,
-  } = useGetPartFilter();
-
-  const pagination = useMemo<PaginationState>(() => {
-    return {
-      pageSize: perPage,
-      pageIndex: page - 1,
-    };
+  useEffect(() => {
+    setPagination({ pageSize: perPage, pageIndex: page - 1 });
   }, [page, perPage]);
 
   const columns = useMemo(() => {
@@ -117,7 +108,7 @@ export default function PartList() {
                   label: "Delete",
                   icon: Trash2Icon,
                   onClick: () => {
-                    console.log("delete");
+                    onDelete(info.row.original);
                   },
                   variant: "destructive",
                 },
@@ -129,19 +120,9 @@ export default function PartList() {
     ];
   }, []);
 
-  const filteredData = useMemo(() => {
-    return (
-      data?.data.filter(
-        (d) =>
-          d.name.toLowerCase().includes(debouncedSearch?.toLowerCase() || "") ||
-          d.code.toLowerCase().includes(debouncedSearch?.toLowerCase() || ""),
-      ) || []
-    );
-  }, [debouncedSearch, data?.data]);
-
   const table = useReactTable({
     columns,
-    data: filteredData,
+    data,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     state: {
@@ -149,22 +130,14 @@ export default function PartList() {
     },
   });
 
-  if (!currentCompany) return null;
-
   return (
     <div className="space-y-4">
-      <AppFilter
-        search={search}
-        setSearch={setSearch}
-        perPage={perPage}
-        setPerPage={setPerPage}
-        searchPlaceholder="Search parts by name or code..."
-      />
       <AppTable table={table} />
       <AppPaginator
         totalRecord={table.getRowCount()}
         currentPage={page}
-        onPageChange={(page) => setPage(page)}
+        perPage={perPage}
+        onPageChange={(page) => onPageChange?.(page)}
       />
     </div>
   );

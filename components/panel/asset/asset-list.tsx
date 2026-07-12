@@ -1,12 +1,7 @@
 "use client";
 
-import { useCompany } from "@/modules/company/context/company-context";
-import {
-  useGetAssetFilter,
-  useGetAssets,
-} from "@/modules/asset/hook/use-get-assets";
 import { AppTable, AppTableActions } from "@/components/app/app-table";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   createColumnHelper,
   getCoreRowModel,
@@ -17,44 +12,34 @@ import {
 import { Asset } from "@/modules/asset/dto/asset";
 import { PenIcon, Trash2Icon } from "lucide-react";
 import { panelUrl } from "@/lib/panels";
-import { AppFilter, AppFilterOther } from "@/components/app/app-filter";
 import AppPaginator from "@/components/app/app-paginator";
 import { StatusBadge, PriorityBadge } from "@/components/app/status-badge";
-import { useGetAssetCategories } from "@/modules/asset/hook/use-get-asset-categories";
-import { CategorySelect } from "@/components/app/category-select";
-import { Label } from "@/components/ui/label";
+import { AssetCategory } from "@/modules/asset/dto/asset-category";
 
-export default function AssetList() {
-  const { currentCompany } = useCompany();
+export interface AssetListProps {
+  data: Asset[];
+  categories: AssetCategory[];
+  onDelete: (asset: Asset) => void;
+  page?: number;
+  perPage?: number;
+  onPageChange?: (page: number) => void;
+}
 
-  const {
-    query: { data },
-  } = useGetAssets({
-    companyId: currentCompany?.id,
-    enabled: !!currentCompany?.id,
+export default function AssetList({
+  data,
+  categories,
+  onDelete,
+  perPage = 10,
+  page = 1,
+  onPageChange,
+}: AssetListProps) {
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageSize: perPage,
+    pageIndex: page - 1,
   });
-  const {
-    query: { data: categoriesData },
-  } = useGetAssetCategories({
-    companyId: currentCompany?.id,
-    enabled: !!currentCompany?.id,
-  });
 
-  const {
-    search,
-    debouncedSearch,
-    page,
-    perPage,
-    setSearch,
-    setPage,
-    setPerPage,
-  } = useGetAssetFilter();
-
-  const pagination = useMemo<PaginationState>(() => {
-    return {
-      pageSize: perPage,
-      pageIndex: page - 1,
-    };
+  useEffect(() => {
+    setPagination({ pageSize: perPage, pageIndex: page - 1 });
   }, [page, perPage]);
 
   const columns = useMemo(() => {
@@ -120,7 +105,7 @@ export default function AssetList() {
                   label: "Delete",
                   icon: Trash2Icon,
                   onClick: () => {
-                    console.log("delete");
+                    onDelete(info.row.original);
                   },
                   variant: "destructive",
                 },
@@ -132,19 +117,9 @@ export default function AssetList() {
     ];
   }, []);
 
-  const filteredData = useMemo(() => {
-    return (
-      data?.data.filter(
-        (d) =>
-          d.name.toLowerCase().includes(debouncedSearch?.toLowerCase() || "") ||
-          d.code.toLowerCase().includes(debouncedSearch?.toLowerCase() || ""),
-      ) || []
-    );
-  }, [debouncedSearch, data?.data]);
-
   const table = useReactTable({
     columns,
-    data: filteredData,
+    data,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     state: {
@@ -152,41 +127,14 @@ export default function AssetList() {
     },
   });
 
-  if (!currentCompany) return null;
-
   return (
     <div className="space-y-4">
-      <AppFilter
-        search={search}
-        setSearch={setSearch}
-        perPage={perPage}
-        setPerPage={setPerPage}
-        searchPlaceholder="Search assets by name or code..."
-        other={
-          <AppFilterOther>
-            <div className="space-y-2">
-              <Label>Priority</Label>
-              <CategorySelect
-                items={["Critical", "High", "Medium", "Low"]}
-                render={(item) => <span>{item}</span>}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label>Category</Label>
-              <CategorySelect
-                items={categoriesData?.data || []}
-                itemToStringValue={(item) => item.name}
-                render={(item) => <span>{item.name}</span>}
-              />
-            </div>
-          </AppFilterOther>
-        }
-      />
       <AppTable table={table} />
       <AppPaginator
         totalRecord={table.getRowCount()}
         currentPage={page}
-        onPageChange={(page) => setPage(page)}
+        perPage={perPage}
+        onPageChange={(page) => onPageChange?.(page)}
       />
     </div>
   );
