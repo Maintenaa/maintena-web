@@ -83,11 +83,11 @@ export function AppFilter({
 export function AppFilterOther({
   children,
   onReset,
-  onSubmit,
+  onApply,
 }: {
   children: React.ReactNode;
   onReset?: () => void;
-  onSubmit?: () => void;
+  onApply?: () => void;
 }) {
   return (
     <div className="space-y-3">
@@ -96,8 +96,8 @@ export function AppFilterOther({
         <Button type="button" variant="secondary" onClick={onReset}>
           Reset
         </Button>
-        <Button type="button" onClick={onSubmit}>
-          Filter
+        <Button type="button" onClick={onApply}>
+          Apply
         </Button>
       </div>
     </div>

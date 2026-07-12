@@ -1,14 +1,13 @@
 import { AssetCategory } from "@/modules/asset/dto/asset-category";
+import { useCompany } from "@/modules/company/context/company-context";
 import { PaginatedApiResponse } from "@/modules/shared/dto/api_response";
 import { api } from "@/network/api";
 import { useQuery } from "@tanstack/react-query";
 
-interface Props {
-  companyId?: string;
-  enabled?: boolean;
-}
+export function useGetAssetCategories() {
+  const { currentCompany } = useCompany();
+  const companyId = currentCompany?.id;
 
-export function useGetAssetCategories({ companyId, enabled }: Props) {
   const query = useQuery({
     queryKey: ["asset-categories", companyId],
     queryFn: async () => {
@@ -17,7 +16,7 @@ export function useGetAssetCategories({ companyId, enabled }: Props) {
       >(`/companies/${companyId}/asset-categories`);
       return data;
     },
-    enabled,
+    enabled: !!companyId,
   });
 
   return { query };

@@ -14,7 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Location } from "@/modules/location/dto/location";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
-import { Form, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import z from "zod";
 
 const validationSchema = z.object({
@@ -34,27 +34,27 @@ export default function LocationFormDialog({
   onOpenChange,
   onSubmit,
 }: LocationFormDialogProps) {
-  const form = useForm({
+  const { control, handleSubmit, setValues } = useForm({
     resolver: zodResolver(validationSchema),
     defaultValues: {
       name: location?.name || "",
     },
   });
 
-  const handleSubmit = form.handleSubmit((d) => {
-    if (onSubmit) onSubmit(d);
+  const handleOnSubmit = handleSubmit((data) => {
+    if (onSubmit) onSubmit(data);
   });
 
   useEffect(() => {
-    form.setValues({
+    setValues({
       name: location?.name || "",
     });
   }, [location]);
 
   return (
-    <form onSubmit={handleSubmit}>
-      <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent>
+        <form method="post" onSubmit={handleOnSubmit} className="space-y-5">
           <DialogHeader>
             <DialogTitle>
               {location ? "Edit Location" : "Create Location"}
@@ -62,7 +62,7 @@ export default function LocationFormDialog({
           </DialogHeader>
 
           <FormControl
-            control={form.control}
+            control={control}
             name="name"
             labelHtmlFor="name"
             label="Name"
@@ -79,8 +79,8 @@ export default function LocationFormDialog({
             </DialogClose>
             <Button type="submit">{location ? "Update" : "Create"}</Button>
           </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    </form>
+        </form>
+      </DialogContent>
+    </Dialog>
   );
 }

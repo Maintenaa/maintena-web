@@ -1,7 +1,7 @@
 "use client";
 
 import AssetList from "@/components/panel/asset/asset-list";
-import { AppFilter } from "@/components/app/app-filter";
+import { AppFilter, AppFilterOther } from "@/components/app/app-filter";
 import { AlertConfirmDialog } from "@/components/app/confirm-dialog";
 import { PanelContentHeader } from "@/components/panel/panel-content";
 import { Button } from "@/components/ui/button";
@@ -16,6 +16,7 @@ import { useGetAssetCategories } from "@/modules/asset/hook/use-get-asset-catego
 import { PlusIcon } from "lucide-react";
 import { useMemo, useState } from "react";
 import Link from "next/link";
+import AssetCategorySelect from "@/components/app/asset-category-select";
 
 export default function Page() {
   const { currentCompany } = useCompany();
@@ -23,13 +24,6 @@ export default function Page() {
   const {
     query: { data: assetsData },
   } = useGetAssets({
-    companyId: currentCompany?.id,
-    enabled: !!currentCompany,
-  });
-
-  const {
-    query: { data: categoriesData },
-  } = useGetAssetCategories({
     companyId: currentCompany?.id,
     enabled: !!currentCompany,
   });
@@ -79,11 +73,15 @@ export default function Page() {
               searchPlaceholder="Search assets by name or code..."
               perPage={perPage}
               setPerPage={setPerPage}
+              other={
+                <AppFilterOther onReset={() => {}} onApply={() => {}}>
+                  <AssetCategorySelect />
+                </AppFilterOther>
+              }
             />
 
             <AssetList
               data={filteredData}
-              categories={categoriesData?.data || []}
               onDelete={(data) => {
                 setDeleteAsset(data);
               }}

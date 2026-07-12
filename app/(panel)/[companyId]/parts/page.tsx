@@ -12,9 +12,16 @@ import {
   useGetPartFilter,
   useGetParts,
 } from "@/modules/part/hook/use-get-parts";
-import { PlusIcon } from "lucide-react";
+import {
+  AudioLinesIcon,
+  PlusIcon,
+  TargetIcon,
+  TicketIcon,
+  TicketSlashIcon,
+} from "lucide-react";
 import { useMemo, useState } from "react";
 import Link from "next/link";
+import { StatsCard, StatsCardProps } from "@/components/panel/stats-card";
 
 export default function Page() {
   const { currentCompany } = useCompany();
@@ -48,6 +55,29 @@ export default function Page() {
     [partsData?.data, debouncedSearch],
   );
 
+  const stats = useMemo<StatsCardProps[]>(
+    () => [
+      {
+        label: "Total Parts",
+        value: (partsData?.data.length || 0).toString(),
+        icon: AudioLinesIcon,
+      },
+      {
+        label: "Active Parts",
+        value: (partsData?.data.length || 0).toString(),
+        icon: TicketIcon,
+        variant: "success",
+      },
+      {
+        label: "Expired Parts",
+        value: (0).toString(),
+        icon: TicketSlashIcon,
+        variant: "warning",
+      },
+    ],
+    [partsData?.data],
+  );
+
   return (
     <>
       <PanelContentHeader
@@ -61,6 +91,12 @@ export default function Page() {
           </Button>
         }
       />
+
+      <div className="mb-4 grid lg:grid-cols-3 grid-cols-1 gap-4">
+        {stats.map((stat, i) => (
+          <StatsCard {...stat} key={i} />
+        ))}
+      </div>
 
       <Card>
         <CardContent>

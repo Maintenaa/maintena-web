@@ -14,11 +14,9 @@ import { PenIcon, Trash2Icon } from "lucide-react";
 import { panelUrl } from "@/lib/panels";
 import AppPaginator from "@/components/app/app-paginator";
 import { StatusBadge, PriorityBadge } from "@/components/app/status-badge";
-import { AssetCategory } from "@/modules/asset/dto/asset-category";
 
 export interface AssetListProps {
   data: Asset[];
-  categories: AssetCategory[];
   onDelete: (asset: Asset) => void;
   page?: number;
   perPage?: number;
@@ -27,7 +25,6 @@ export interface AssetListProps {
 
 export default function AssetList({
   data,
-  categories,
   onDelete,
   perPage = 10,
   page = 1,

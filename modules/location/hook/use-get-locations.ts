@@ -1,3 +1,4 @@
+import { useCompany } from "@/modules/company/context/company-context";
 import { Location } from "@/modules/location/dto/location";
 import { PaginatedApiResponse } from "@/modules/shared/dto/api_response";
 import { useDebouncedState } from "@/modules/shared/hook/use-debounced-state";
@@ -5,12 +6,10 @@ import { api } from "@/network/api";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 
-interface Props {
-  companyId?: string;
-  enabled?: boolean;
-}
+export function useGetLocations() {
+  const { currentCompany } = useCompany();
+  const companyId = currentCompany?.id;
 
-export function useGetLocations({ companyId, enabled }: Props = {}) {
   const query = useQuery({
     queryKey: ["locations", companyId],
     queryFn: async () => {
@@ -19,7 +18,7 @@ export function useGetLocations({ companyId, enabled }: Props = {}) {
       );
       return data;
     },
-    enabled,
+    enabled: !!companyId,
   });
 
   return { query };
