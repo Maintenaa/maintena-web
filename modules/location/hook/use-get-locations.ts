@@ -10,7 +10,7 @@ interface Props {
   enabled?: boolean;
 }
 
-export function useGetLocations({ companyId, enabled }: Props) {
+export function useGetLocations({ companyId, enabled }: Props = {}) {
   const query = useQuery({
     queryKey: ["locations", companyId],
     queryFn: async () => {

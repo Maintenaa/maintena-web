@@ -1,12 +1,7 @@
 "use client";
 
-import { useCompany } from "@/modules/company/context/company-context";
-import {
-  useGetLocationFilter,
-  useGetLocations,
-} from "../../../modules/location/hook/use-get-locations";
 import { AppTable, AppTableActions } from "@/components/app/app-table";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   createColumnHelper,
   getCoreRowModel,
@@ -16,35 +11,32 @@ import {
 } from "@tanstack/react-table";
 import { Location } from "@/modules/location/dto/location";
 import { PenIcon, Trash2Icon } from "lucide-react";
-import { panelUrl } from "@/lib/panels";
-import { AppFilter } from "@/components/app/app-filter";
 import AppPaginator from "@/components/app/app-paginator";
-import LocationFormDialog from "./location-form-dialog";
 
-export default function LocationList() {
-  const { currentCompany } = useCompany();
-  const [editLocation, setEditLocation] = useState<Location | null>(null);
+export interface LocationListProps {
+  data: Location[];
+  onEdit: (location: Location) => void;
+  onDelete: (location: Location) => void;
+  page?: number;
+  perPage?: number;
+  onPageChange?: (page: number) => void;
+}
 
-  const {
-    query: { data },
-  } = useGetLocations({
-    companyId: currentCompany?.id,
-    enabled: !!currentCompany?.id,
+export default function LocationList({
+  data,
+  onEdit,
+  onDelete,
+  perPage = 10,
+  page = 1,
+  onPageChange,
+}: LocationListProps) {
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageSize: perPage,
+    pageIndex: page - 1,
   });
-  const {
-    search,
-    debouncedSearch,
-    page,
-    perPage,
-    setSearch,
-    setPage,
-    setPerPage,
-  } = useGetLocationFilter();
-  const pagination = useMemo<PaginationState>(() => {
-    return {
-      pageSize: perPage,
-      pageIndex: page - 1,
-    };
+
+  useEffect(() => {
+    setPagination({ pageSize: perPage, pageIndex: page - 1 });
   }, [page, perPage]);
 
   const columns = useMemo(() => {
@@ -75,14 +67,14 @@ export default function LocationList() {
                   label: "Edit",
                   icon: PenIcon,
                   onClick: () => {
-                    setEditLocation(info.row.original);
+                    onEdit(info.row.original);
                   },
                 },
                 {
                   label: "Delete",
                   icon: Trash2Icon,
                   onClick: () => {
-                    console.log("dete");
+                    onDelete(info.row.original);
                   },
                   variant: "destructive",
                 },
@@ -94,17 +86,9 @@ export default function LocationList() {
     ];
   }, []);
 
-  const filteredData = useMemo(() => {
-    return (
-      data?.data.filter((d) =>
-        d.name.toLowerCase().includes(debouncedSearch?.toLowerCase() || ""),
-      ) || []
-    );
-  }, [debouncedSearch, data?.data]);
-
   const table = useReactTable({
     columns,
-    data: filteredData,
+    data,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     state: {
@@ -112,35 +96,17 @@ export default function LocationList() {
     },
   });
 
-  if (!currentCompany) return null;
-
   return (
     <>
       <div className="space-y-4">
-        <AppFilter
-          search={search}
-          setSearch={setSearch}
-          perPage={perPage}
-          setPerPage={setPerPage}
-          searchPlaceholder="Search locations..."
-        />
         <AppTable table={table} />
         <AppPaginator
           totalRecord={table.getRowCount()}
           currentPage={page}
-          onPageChange={(page) => setPage(page)}
+          perPage={perPage}
+          onPageChange={(page) => onPageChange?.(page)}
         />
       </div>
-
-      <LocationFormDialog
-        open={!!editLocation}
-        onOpenChange={(val) => {
-          if (!val) {
-            setEditLocation(null);
-          }
-        }}
-        location={editLocation}
-      />
     </>
   );
 }

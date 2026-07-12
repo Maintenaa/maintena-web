@@ -13,6 +13,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Location } from "@/modules/location/dto/location";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
 import { Form, useForm } from "react-hook-form";
 import z from "zod";
 
@@ -43,6 +44,12 @@ export default function LocationFormDialog({
   const handleSubmit = form.handleSubmit((d) => {
     if (onSubmit) onSubmit(d);
   });
+
+  useEffect(() => {
+    form.setValues({
+      name: location?.name || "",
+    });
+  }, [location]);
 
   return (
     <form onSubmit={handleSubmit}>
