@@ -7,8 +7,10 @@ import LocationList from "@/components/panel/location/location-list";
 import { PanelContentHeader } from "@/components/panel/panel-content";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { useCompany } from "@/modules/company/context/company-context";
 import { Location } from "@/modules/location/dto/location";
+import { useCreateLocation } from "@/modules/location/hook/use-create-location";
+import { useDeleteLocation } from "@/modules/location/hook/use-delete-location";
+import { useUpdateLocation } from "@/modules/location/hook/use-update-location";
 import {
   useGetLocationFilter,
   useGetLocations,
@@ -17,14 +19,9 @@ import { PlusIcon } from "lucide-react";
 import { useMemo, useState } from "react";
 
 export default function Page() {
-  const { currentCompany } = useCompany();
-
   const {
     query: { data: locationsData },
-  } = useGetLocations({
-    companyId: currentCompany?.id,
-    enabled: !!currentCompany,
-  });
+  } = useGetLocations();
 
   const {
     page,
@@ -35,6 +32,10 @@ export default function Page() {
     setSearch,
     debouncedSearch,
   } = useGetLocationFilter();
+
+  const { mutation: createLocation } = useCreateLocation();
+  const { mutation: updateLocation } = useUpdateLocation();
+  const { mutation: deleteLocationMutation } = useDeleteLocation();
 
   const [isCreate, setIsCreate] = useState(false);
   const [editLocation, setEditLocation] = useState<Location | null>(null);
@@ -76,7 +77,6 @@ export default function Page() {
               perPage={perPage}
               setPerPage={setPerPage}
             />
-
             <LocationList
               data={filteredData}
               onEdit={(data) => {
@@ -102,6 +102,24 @@ export default function Page() {
             setIsCreate(false);
           }
         }}
+        onSubmit={(data) => {
+          if (editLocation) {
+            updateLocation.mutate(
+              { id: editLocation.id, name: data.name },
+              {
+                onSuccess: () => {
+                  setEditLocation(null);
+                },
+              },
+            );
+          } else {
+            createLocation.mutate(data, {
+              onSuccess: () => {
+                setIsCreate(false);
+              },
+            });
+          }
+        }}
       />
 
       <AlertConfirmDialog
@@ -113,7 +131,15 @@ export default function Page() {
             setDeleteLocation(null);
           }
         }}
-        onConfirm={() => {}}
+        onConfirm={() => {
+          if (deleteLocation) {
+            deleteLocationMutation.mutate(deleteLocation.id, {
+              onSuccess: () => {
+                setDeleteLocation(null);
+              },
+            });
+          }
+        }}
         confirmText="Delete"
         confirmVariant="destructive"
       />
