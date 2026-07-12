@@ -79,3 +79,27 @@ export function AppFilter({
     </div>
   );
 }
+
+export function AppFilterOther({
+  children,
+  onReset,
+  onSubmit,
+}: {
+  children: React.ReactNode;
+  onReset?: () => void;
+  onSubmit?: () => void;
+}) {
+  return (
+    <div className="space-y-3">
+      {children}
+      <div className="grid grid-cols-2 gap-2 pt-2">
+        <Button type="button" variant="secondary" onClick={onReset}>
+          Reset
+        </Button>
+        <Button type="button" onClick={onSubmit}>
+          Filter
+        </Button>
+      </div>
+    </div>
+  );
+}

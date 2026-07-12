@@ -6,7 +6,7 @@ import {
   useGetLocations,
 } from "../../../modules/location/hook/use-get-locations";
 import { AppTable, AppTableActions } from "@/components/app/app-table";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import {
   createColumnHelper,
   getCoreRowModel,
@@ -19,9 +19,11 @@ import { PenIcon, Trash2Icon } from "lucide-react";
 import { panelUrl } from "@/lib/panels";
 import { AppFilter } from "@/components/app/app-filter";
 import AppPaginator from "@/components/app/app-paginator";
+import LocationFormDialog from "./location-form-dialog";
 
 export default function LocationList() {
   const { currentCompany } = useCompany();
+  const [editLocation, setEditLocation] = useState<Location | null>(null);
 
   const {
     query: { data },
@@ -72,7 +74,9 @@ export default function LocationList() {
                 {
                   label: "Edit",
                   icon: PenIcon,
-                  url: panelUrl(`/locations/${info.row.original.id}/edit`),
+                  onClick: () => {
+                    setEditLocation(info.row.original);
+                  },
                 },
                 {
                   label: "Delete",
@@ -111,20 +115,32 @@ export default function LocationList() {
   if (!currentCompany) return null;
 
   return (
-    <div className="space-y-4">
-      <AppFilter
-        search={search}
-        setSearch={setSearch}
-        perPage={perPage}
-        setPerPage={setPerPage}
-        searchPlaceholder="Search locations..."
+    <>
+      <div className="space-y-4">
+        <AppFilter
+          search={search}
+          setSearch={setSearch}
+          perPage={perPage}
+          setPerPage={setPerPage}
+          searchPlaceholder="Search locations..."
+        />
+        <AppTable table={table} />
+        <AppPaginator
+          totalRecord={table.getRowCount()}
+          currentPage={page}
+          onPageChange={(page) => setPage(page)}
+        />
+      </div>
+
+      <LocationFormDialog
+        open={!!editLocation}
+        onOpenChange={(val) => {
+          if (!val) {
+            setEditLocation(null);
+          }
+        }}
+        location={editLocation}
       />
-      <AppTable table={table} />
-      <AppPaginator
-        totalRecord={table.getRowCount()}
-        currentPage={page}
-        onPageChange={(page) => setPage(page)}
-      />
-    </div>
+    </>
   );
 }

@@ -17,12 +17,11 @@ import {
 import { Asset } from "@/modules/asset/dto/asset";
 import { PenIcon, Trash2Icon } from "lucide-react";
 import { panelUrl } from "@/lib/panels";
-import { AppFilter } from "@/components/app/app-filter";
+import { AppFilter, AppFilterOther } from "@/components/app/app-filter";
 import AppPaginator from "@/components/app/app-paginator";
 import { StatusBadge, PriorityBadge } from "@/components/app/status-badge";
 import { useGetAssetCategories } from "@/modules/asset/hook/use-get-asset-categories";
 import { CategorySelect } from "@/components/app/category-select";
-import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 
 export default function AssetList() {
@@ -164,7 +163,7 @@ export default function AssetList() {
         setPerPage={setPerPage}
         searchPlaceholder="Search assets by name or code..."
         other={
-          <div className="space-y-3">
+          <AppFilterOther>
             <div className="space-y-2">
               <Label>Priority</Label>
               <CategorySelect
@@ -180,13 +179,7 @@ export default function AssetList() {
                 render={(item) => <span>{item.name}</span>}
               />
             </div>
-            <div className="grid grid-cols-2 gap-2 pt-2">
-              <Button type="button" variant="secondary">
-                Reset
-              </Button>
-              <Button type="button">Filter</Button>
-            </div>
-          </div>
+          </AppFilterOther>
         }
       />
       <AppTable table={table} />

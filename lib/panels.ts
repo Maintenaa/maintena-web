@@ -8,7 +8,7 @@ export function panelUrl(path?: string) {
   const founds = UUID_REGEX.exec(window.location.pathname);
   const basepath = founds ? founds[0].toString() : "/";
 
-  return `/${basepath}${path || ""}`;
+  return `/${basepath}${path || ""}`.replaceAll(/\/{2,}/g, "/");
 }
 
 export function isPanelPathActive(path: string, match: string) {
