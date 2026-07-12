@@ -10,7 +10,14 @@ import {
 } from "../ui/command";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AssetCategory } from "@/modules/asset/dto/asset-category";
-import { PenIcon, PlusIcon, SearchIcon, Trash2Icon, XIcon } from "lucide-react";
+import {
+  CheckIcon,
+  PenIcon,
+  PlusIcon,
+  SearchIcon,
+  Trash2Icon,
+  XIcon,
+} from "lucide-react";
 import { Button } from "../ui/button";
 import {
   Dialog,
@@ -26,7 +33,15 @@ import { AlertConfirmDialog } from "./confirm-dialog";
 import { useDeleteAssetCategory } from "@/modules/asset/hook/use-delete-asset-category";
 import { useUpdateAssetCategory } from "@/modules/asset/hook/use-update-asset-category";
 
-export default function AssetCategorySelect() {
+export interface AssetCategorySelectProps {
+  value?: AssetCategory | null;
+  onValueChange?: (value: AssetCategory | null | undefined) => void;
+}
+
+export default function AssetCategorySelect({
+  value: initialValue,
+  onValueChange,
+}: AssetCategorySelectProps) {
   const {
     query: { data: data },
   } = useGetAssetCategories();
@@ -38,6 +53,15 @@ export default function AssetCategorySelect() {
 
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
+  const [value, setValue] = useState<AssetCategory | null>(
+    initialValue || null,
+  );
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setValue(initialValue || null);
+  }, [initialValue]);
+
   const [deleteCategory, setDeleteCategory] = useState<AssetCategory | null>(
     null,
   );
@@ -102,6 +126,14 @@ export default function AssetCategorySelect() {
     } catch (err) {
       toast.error(getErrorMessage(err));
     }
+  }
+
+  function handleSelectCategory(category: AssetCategory) {
+    const newCategory = value?.id == category.id ? null : category;
+
+    setValue(newCategory);
+    onValueChange?.(newCategory);
+    setOpen(false);
   }
 
   return (
@@ -169,28 +201,37 @@ export default function AssetCategorySelect() {
                   {filteredCategories.map((category) => (
                     <CommandItem
                       key={category.id}
-                      className="w-full flex items-center justify-between group"
+                      className={[
+                        "w-full flex items-center justify-between group gap-2",
+                        value?.id == category.id ? "bg-primary/10" : "",
+                      ].join(" ")}
+                      onSelect={() => handleSelectCategory(category)}
                     >
                       <div className="flex-1 min-w-0">{category.name}</div>
-                      <div className="flex items-center gap-2 order-last opacity-0 transition group-hover:opacity-100 text-muted-foreground">
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setInput(category.name);
-                            inputRef.current?.focus();
-                            setEditCategory(category);
-                          }}
-                          className="cursor-pointer"
-                        >
-                          <PenIcon className="size-3" />
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => setDeleteCategory(category)}
-                          className="cursor-pointer"
-                        >
-                          <Trash2Icon className="size-3" />
-                        </button>
+                      <div className="flex items-center gap-2 order-last text-muted-foreground">
+                        <div className="flex items-center gap-2 opacity-0 transition group-hover:opacity-100">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setInput(category.name);
+                              inputRef.current?.focus();
+                              setEditCategory(category);
+                            }}
+                            className="cursor-pointer"
+                          >
+                            <PenIcon className="size-3" />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setDeleteCategory(category)}
+                            className="cursor-pointer"
+                          >
+                            <Trash2Icon className="size-3" />
+                          </button>
+                        </div>
+                        {value?.id == category.id && (
+                          <CheckIcon className="size-4 text-primary" />
+                        )}
                       </div>
                     </CommandItem>
                   ))}
