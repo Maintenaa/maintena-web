@@ -11,8 +11,8 @@ import {
 } from "@tanstack/react-table";
 import { Part } from "@/modules/part/dto/part";
 import { PenIcon, Trash2Icon } from "lucide-react";
-import { panelUrl } from "@/lib/panels";
 import AppPaginator from "@/components/app/app-paginator";
+import { usePanelPath } from "@/lib/panels";
 
 export interface PartListProps {
   data: Part[];
@@ -29,6 +29,8 @@ export default function PartList({
   page = 1,
   onPageChange,
 }: PartListProps) {
+  const { panelUrl } = usePanelPath();
+
   const [pagination, setPagination] = useState<PaginationState>({
     pageSize: perPage,
     pageIndex: page - 1,

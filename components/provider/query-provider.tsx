@@ -8,7 +8,17 @@ export default function QueryProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const queryClient = useMemo(() => new QueryClient(), []);
+  const queryClient = useMemo(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            retry: 1,
+          },
+        },
+      }),
+    [],
+  );
 
   return (
     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>

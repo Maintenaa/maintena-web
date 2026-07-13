@@ -11,9 +11,9 @@ import {
 } from "@tanstack/react-table";
 import { Asset } from "@/modules/asset/dto/asset";
 import { PenIcon, Trash2Icon } from "lucide-react";
-import { panelUrl } from "@/lib/panels";
 import AppPaginator from "@/components/app/app-paginator";
 import { StatusBadge, PriorityBadge } from "@/components/app/status-badge";
+import { usePanelPath } from "@/lib/panels";
 
 export interface AssetListProps {
   data: Asset[];
@@ -30,6 +30,8 @@ export default function AssetList({
   page = 1,
   onPageChange,
 }: AssetListProps) {
+  const { panelUrl } = usePanelPath();
+
   const [pagination, setPagination] = useState<PaginationState>({
     pageSize: perPage,
     pageIndex: page - 1,
