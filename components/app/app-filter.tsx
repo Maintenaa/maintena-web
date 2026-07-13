@@ -7,7 +7,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverHeader,
+  PopoverTitle,
+  PopoverTrigger,
+} from "../ui/popover";
 import { Button } from "../ui/button";
 
 export function AppFilter({
@@ -72,6 +78,9 @@ export function AppFilter({
             </Button>
           </PopoverTrigger>
           <PopoverContent align="end" className="w-80 max-w-full p-3">
+            <PopoverHeader>
+              <PopoverTitle>Filter</PopoverTitle>
+            </PopoverHeader>
             {other}
           </PopoverContent>
         </Popover>

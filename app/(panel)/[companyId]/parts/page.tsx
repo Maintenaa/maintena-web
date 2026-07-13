@@ -1,7 +1,7 @@
 "use client";
 
 import PartList from "@/components/panel/part/part-list";
-import { AppFilter } from "@/components/app/app-filter";
+import { AppFilter, AppFilterOther } from "@/components/app/app-filter";
 import { AlertConfirmDialog } from "@/components/app/confirm-dialog";
 import { PanelContentHeader } from "@/components/panel/panel-content";
 import { Button } from "@/components/ui/button";
@@ -22,6 +22,8 @@ import {
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { StatsCard, StatsCardProps } from "@/components/panel/stats-card";
+import { Label } from "@/components/ui/label";
+import PartCategorySelect from "@/components/app/part-category-select";
 
 export default function Page() {
   const { currentCompany } = useCompany();
@@ -107,6 +109,11 @@ export default function Page() {
               searchPlaceholder="Search parts by name or code..."
               perPage={perPage}
               setPerPage={setPerPage}
+              other={
+                <AppFilterOther>
+                  <PartCategorySelect />
+                </AppFilterOther>
+              }
             />
 
             <PartList

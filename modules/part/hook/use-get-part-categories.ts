@@ -1,14 +1,13 @@
 import { PartCategory } from "@/modules/part/dto/part-category";
+import { useCompany } from "@/modules/company/context/company-context";
 import { PaginatedApiResponse } from "@/modules/shared/dto/api_response";
 import { api } from "@/network/api";
 import { useQuery } from "@tanstack/react-query";
 
-interface Props {
-  companyId?: string;
-  enabled?: boolean;
-}
+export function useGetPartCategories() {
+  const { currentCompany } = useCompany();
+  const companyId = currentCompany?.id;
 
-export function useGetPartCategories({ companyId, enabled }: Props) {
   const query = useQuery({
     queryKey: ["part-categories", companyId],
     queryFn: async () => {
@@ -17,7 +16,7 @@ export function useGetPartCategories({ companyId, enabled }: Props) {
       >(`/companies/${companyId}/part-categories`);
       return data;
     },
-    enabled,
+    enabled: !!companyId,
   });
 
   return { query };
