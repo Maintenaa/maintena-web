@@ -69,17 +69,17 @@ export function PanelSidebar({
             title: "Parts",
             url: panelUrl("/parts"),
             icon: AudioLinesIcon,
-            isActive: match("/parts*"),
+            isActive: match("/parts*") || match("/part-suppliers*"),
             items: [
               {
                 url: panelUrl("/parts"),
                 title: "List Parts",
-                isActive: match("/parts"),
+                isActive: match("/parts*"),
               },
               {
-                url: panelUrl("/parts/supplier"),
+                url: panelUrl("/part-suppliers"),
                 title: "Supplier Parts",
-                isActive: match("/parts/supplier"),
+                isActive: match("/part-suppliers*"),
               },
             ],
           },
