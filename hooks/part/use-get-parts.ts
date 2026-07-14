@@ -1,25 +1,21 @@
-import { Part } from "@/modules/part/dto/part";
-import { PaginatedApiResponse } from "@/modules/shared/dto/api_response";
 import { useDebouncedState } from "@/hooks/use-debounced-state";
-import { api } from "@/network/api";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
+import { partRepository } from "../../modules/part/part-module";
+import { useCompany } from "@/components/provider/company-provider";
 
-interface Props {
-  companyId?: string;
-  enabled?: boolean;
-}
+export function useGetParts() {
+  const { currentCompany } = useCompany();
+  const companyId = currentCompany?.id;
 
-export function useGetParts({ companyId, enabled }: Props) {
   const query = useQuery({
     queryKey: ["parts", companyId],
     queryFn: async () => {
-      const { data } = await api.client.get<PaginatedApiResponse<Part[]>>(
-        `/companies/${companyId}/parts`,
-      );
-      return data;
+      if (!companyId) throw new Error("companyId is required");
+      const { data, pagination } = await partRepository.getParts({ companyId });
+      return { data, pagination };
     },
-    enabled,
+    enabled: !!companyId,
   });
 
   return { query };

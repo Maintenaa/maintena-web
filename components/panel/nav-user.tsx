@@ -8,8 +8,8 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { ChevronsUpDownIcon } from "lucide-react";
-import UserDropdown from "./user-dropdown";
-import { useAuth } from "./provider/auth-provider";
+import UserDropdown from "../app/user-dropdown";
+import { useAuth } from "../provider/auth-provider";
 
 export function NavUser() {
   const { user } = useAuth();

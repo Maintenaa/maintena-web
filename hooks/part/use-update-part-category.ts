@@ -1,8 +1,6 @@
 import { useCompany } from "@/components/provider/company-provider";
-import { ApiResponse } from "@/modules/shared/dto/api_response";
-import { api } from "@/network/api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { PartCategory } from "../../modules/part/dto/part-category";
+import { partRepository } from "../../modules/part/part-module";
 
 export function useUpdatePartCategory() {
   const { currentCompany } = useCompany();
@@ -17,11 +15,8 @@ export function useUpdatePartCategory() {
       categoryId: string;
       name: string;
     }) => {
-      const { data } = await api.client.put<ApiResponse<PartCategory>>(
-        `/companies/${companyId}/part-categories/${categoryId}`,
-        { name },
-      );
-      return data;
+      if (!companyId) throw new Error("companyId is required");
+      return partRepository.updatePartCategory({ companyId, categoryId, name });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({

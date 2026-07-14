@@ -1,6 +1,6 @@
 import { useCompany } from "@/components/provider/company-provider";
-import { api } from "@/network/api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { assetRepository } from "../../modules/asset/asset-module";
 
 export function useDeleteAssetCategory() {
   const { currentCompany } = useCompany();
@@ -9,10 +9,8 @@ export function useDeleteAssetCategory() {
 
   const mutation = useMutation({
     mutationFn: async (categoryId: string) => {
-      const { data } = await api.client.delete(
-        `/companies/${companyId}/asset-categories/${categoryId}`
-      );
-      return data;
+      if (!companyId) throw new Error("companyId is required");
+      return assetRepository.deleteAssetCategory({ companyId, categoryId });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["asset-categories", companyId] });

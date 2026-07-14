@@ -1,6 +1,6 @@
 "use client";
 
-import { ThemeToggler } from "@/components/theme-toggler";
+import { ThemeToggler } from "@/components/app/theme-toggler";
 import { GalleryVerticalEndIcon } from "lucide-react";
 import Link from "next/link";
 

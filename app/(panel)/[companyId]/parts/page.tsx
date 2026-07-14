@@ -12,15 +12,13 @@ import { useGetPartFilter, useGetParts } from "@/hooks/part/use-get-parts";
 import {
   AudioLinesIcon,
   PlusIcon,
-  TargetIcon,
   TicketIcon,
   TicketSlashIcon,
 } from "lucide-react";
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { StatsCard, StatsCardProps } from "@/components/panel/stats-card";
-import { Label } from "@/components/ui/label";
-import PartCategorySelect from "@/components/app/part-category-select";
+import PartCategorySelect from "@/components/form/part-category-select";
 
 export default function Page() {
   const { currentCompany } = useCompany();

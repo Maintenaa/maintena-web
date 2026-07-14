@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, ReactNode, useContext, useState } from "react";
-import { BreadcrumbItem } from "../nav-breadcrumb";
+import { BreadcrumbItem } from "../app/nav-breadcrumb";
 import PanelContent from "./panel-content";
 
 export interface PanelContext {

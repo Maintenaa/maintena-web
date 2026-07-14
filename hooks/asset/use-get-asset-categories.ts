@@ -1,8 +1,6 @@
-import { AssetCategory } from "@/modules/asset/dto/asset-category";
 import { useCompany } from "@/components/provider/company-provider";
-import { PaginatedApiResponse } from "@/modules/shared/dto/api_response";
-import { api } from "@/network/api";
 import { useQuery } from "@tanstack/react-query";
+import { assetRepository } from "../../modules/asset/asset-module";
 
 export function useGetAssetCategories() {
   const { currentCompany } = useCompany();
@@ -11,10 +9,9 @@ export function useGetAssetCategories() {
   const query = useQuery({
     queryKey: ["asset-categories", companyId],
     queryFn: async () => {
-      const { data } = await api.client.get<
-        PaginatedApiResponse<AssetCategory[]>
-      >(`/companies/${companyId}/asset-categories`);
-      return data;
+      if (!companyId) throw new Error("companyId is required");
+      const { data, pagination } = await assetRepository.getAssetCategories({ companyId });
+      return { data, pagination };
     },
     enabled: !!companyId,
   });

@@ -4,7 +4,7 @@ import { cn, getErrorMessage } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Field, FieldGroup } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import FormControl from "./form/form-control";
+import FormControl from "../form/form-control";
 import { useState } from "react";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
 import { toast } from "sonner";

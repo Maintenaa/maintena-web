@@ -1,6 +1,6 @@
 "use client";
 
-import { useGetPartCategories } from "@/hooks/part/use-get-part-categories";
+import { useGetAssetCategories } from "@/hooks/asset/use-get-asset-categories";
 import {
   Command,
   CommandGroup,
@@ -9,7 +9,7 @@ import {
   CommandList,
 } from "../ui/command";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { PartCategory } from "@/modules/part/dto/part-category";
+import { AssetCategory } from "@/modules/asset/dto/asset-category";
 import {
   CheckIcon,
   PenIcon,
@@ -26,46 +26,48 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../ui/dialog";
-import { useCreatePartCategory } from "@/hooks/part/use-create-part-category";
+import { useCreateAssetCategory } from "@/hooks/asset/use-create-asset-category";
 import { toast } from "sonner";
 import { getErrorMessage } from "@/lib/utils";
-import { AlertConfirmDialog } from "./confirm-dialog";
-import { useDeletePartCategory } from "@/hooks/part/use-delete-part-category";
-import { useUpdatePartCategory } from "@/hooks/part/use-update-part-category";
+import { useDeleteAssetCategory } from "@/hooks/asset/use-delete-asset-category";
+import { useUpdateAssetCategory } from "@/hooks/asset/use-update-asset-category";
+import { AlertConfirmDialog } from "../app/confirm-dialog";
 
-export interface PartCategorySelectProps {
-  value?: PartCategory | null;
-  onValueChange?: (value: PartCategory | null | undefined) => void;
+export interface AssetCategorySelectProps {
+  value?: AssetCategory | null;
+  onValueChange?: (value: AssetCategory | null | undefined) => void;
 }
 
-export default function PartCategorySelect({
+export default function AssetCategorySelect({
   value: initialValue,
   onValueChange,
-}: PartCategorySelectProps) {
+}: AssetCategorySelectProps) {
   const {
     query: { data: data },
-  } = useGetPartCategories();
-  const { mutation: createPartCategory } = useCreatePartCategory();
-  const { mutation: updatePartCategory } = useUpdatePartCategory();
-  const { mutation: deletePartCategory } = useDeletePartCategory();
+  } = useGetAssetCategories();
+  const { mutation: createAssetCategory } = useCreateAssetCategory();
+  const { mutation: updateAssetCategory } = useUpdateAssetCategory();
+  const { mutation: deleteAssetCategory } = useDeleteAssetCategory();
 
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
-  const [value, setValue] = useState<PartCategory | null>(initialValue || null);
+  const [value, setValue] = useState<AssetCategory | null>(
+    initialValue || null,
+  );
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setValue(initialValue || null);
   }, [initialValue]);
 
-  const [deleteCategory, setDeleteCategory] = useState<PartCategory | null>(
+  const [deleteCategory, setDeleteCategory] = useState<AssetCategory | null>(
     null,
   );
-  const [editCategory, setEditCategory] = useState<PartCategory | null>(null);
+  const [editCategory, setEditCategory] = useState<AssetCategory | null>(null);
 
-  const [categories, setCategories] = useState<PartCategory[]>(
+  const [categories, setCategories] = useState<AssetCategory[]>(
     data?.data || [],
   );
 
@@ -84,7 +86,7 @@ export default function PartCategorySelect({
 
   async function handleCreateCategory() {
     try {
-      const result = await createPartCategory.mutateAsync(input);
+      const result = await createAssetCategory.mutateAsync(input);
 
       setCategories((prev) => [...prev, result.data]);
       setInput("");
@@ -97,7 +99,7 @@ export default function PartCategorySelect({
     if (!editCategory) return;
 
     try {
-      const result = await updatePartCategory.mutateAsync({
+      const result = await updateAssetCategory.mutateAsync({
         categoryId: editCategory.id,
         name: input,
       });
@@ -116,7 +118,7 @@ export default function PartCategorySelect({
     if (!deleteCategory) return;
 
     try {
-      await deletePartCategory.mutateAsync(deleteCategory.id);
+      await deleteAssetCategory.mutateAsync(deleteCategory.id);
       setCategories((prev) => prev.filter((c) => c.id !== deleteCategory.id));
       setDeleteCategory(null);
       setInput("");
@@ -126,7 +128,7 @@ export default function PartCategorySelect({
     }
   }
 
-  function handleSelectCategory(category: PartCategory) {
+  function handleSelectCategory(category: AssetCategory) {
     const newCategory = value?.id == category.id ? null : category;
 
     setValue(newCategory);

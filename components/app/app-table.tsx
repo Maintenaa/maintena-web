@@ -10,7 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from "../ui/table";
-import { NoRecord } from "../no-record";
+import { NoRecord } from "./no-record";
 import {
   DropdownMenu,
   DropdownMenuContent,

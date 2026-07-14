@@ -1,10 +1,8 @@
 import { useCompany } from "@/components/provider/company-provider";
-import { Location } from "@/modules/location/dto/location";
-import { PaginatedApiResponse } from "@/modules/shared/dto/api_response";
 import { useDebouncedState } from "@/hooks/use-debounced-state";
-import { api } from "@/network/api";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
+import { locationRepository } from "../../modules/location/location-module";
 
 export function useGetLocations() {
   const { currentCompany } = useCompany();
@@ -13,10 +11,9 @@ export function useGetLocations() {
   const query = useQuery({
     queryKey: ["locations", companyId],
     queryFn: async () => {
-      const { data } = await api.client.get<PaginatedApiResponse<Location[]>>(
-        `/companies/${companyId}/locations`,
-      );
-      return data;
+      if (!companyId) throw new Error("companyId is required");
+      const { data, pagination } = await locationRepository.getLocations({ companyId });
+      return { data, pagination };
     },
     enabled: !!companyId,
   });

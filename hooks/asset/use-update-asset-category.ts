@@ -1,8 +1,6 @@
 import { useCompany } from "@/components/provider/company-provider";
-import { ApiResponse } from "@/modules/shared/dto/api_response";
-import { api } from "@/network/api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { AssetCategory } from "../../modules/asset/dto/asset-category";
+import { assetRepository } from "../../modules/asset/asset-module";
 
 export function useUpdateAssetCategory() {
   const { currentCompany } = useCompany();
@@ -17,11 +15,8 @@ export function useUpdateAssetCategory() {
       categoryId: string;
       name: string;
     }) => {
-      const { data } = await api.client.put<ApiResponse<AssetCategory>>(
-        `/companies/${companyId}/asset-categories/${categoryId}`,
-        { name },
-      );
-      return data;
+      if (!companyId) throw new Error("companyId is required");
+      return assetRepository.updateAssetCategory({ companyId, categoryId, name });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({

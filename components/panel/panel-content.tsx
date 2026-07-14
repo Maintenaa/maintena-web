@@ -2,8 +2,8 @@
 
 import { Separator } from "../ui/separator";
 import { SidebarTrigger } from "../ui/sidebar";
-import NavBreadcrumb, { BreadcrumbItem } from "../nav-breadcrumb";
-import { ThemeToggler } from "../theme-toggler";
+import NavBreadcrumb, { BreadcrumbItem } from "../app/nav-breadcrumb";
+import { ThemeToggler } from "../app/theme-toggler";
 import { useCompany } from "@/components/provider/company-provider";
 
 interface Props {

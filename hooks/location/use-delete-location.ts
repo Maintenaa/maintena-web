@@ -1,6 +1,6 @@
 import { useCompany } from "@/components/provider/company-provider";
-import { api } from "@/network/api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { locationRepository } from "../../modules/location/location-module";
 
 export function useDeleteLocation() {
   const { currentCompany } = useCompany();
@@ -10,10 +10,8 @@ export function useDeleteLocation() {
   const mutation = useMutation({
     mutationKey: ["delete-location", companyId],
     mutationFn: async (id: string) => {
-      const { data } = await api.client.delete(
-        `/companies/${companyId}/locations/${id}`,
-      );
-      return data;
+      if (!companyId) throw new Error("companyId is required");
+      return locationRepository.deleteLocation({ companyId, id });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["locations", companyId] });

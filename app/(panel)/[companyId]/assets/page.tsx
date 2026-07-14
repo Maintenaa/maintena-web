@@ -12,8 +12,8 @@ import { useGetAssetFilter, useGetAssets } from "@/hooks/asset/use-get-assets";
 import { PlusIcon } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import AssetCategorySelect from "@/components/app/asset-category-select";
 import { usePanelContext } from "@/components/panel/panel-provider";
+import AssetCategorySelect from "@/components/form/asset-category-select";
 
 export default function Page() {
   const { setBreadcrumbs } = usePanelContext();

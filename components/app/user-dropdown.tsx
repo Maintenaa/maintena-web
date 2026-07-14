@@ -1,5 +1,5 @@
 import { BellIcon, LogOutIcon, SparklesIcon, UserIcon } from "lucide-react";
-import { Avatar, AvatarFallback } from "./ui/avatar";
+import { Avatar, AvatarFallback } from "../ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,10 +8,10 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
+} from "../ui/dropdown-menu";
 import { User } from "@/modules/user/dto/user";
 import { useState } from "react";
-import { AlertConfirmDialog } from "./app/confirm-dialog";
+import { AlertConfirmDialog } from "./confirm-dialog";
 
 interface Props {
   user: User;

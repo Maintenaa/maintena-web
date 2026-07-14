@@ -1,25 +1,23 @@
-import { Asset } from "@/modules/asset/dto/asset";
-import { PaginatedApiResponse } from "@/modules/shared/dto/api_response";
 import { useDebouncedState } from "@/hooks/use-debounced-state";
-import { api } from "@/network/api";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
+import { assetRepository } from "../../modules/asset/asset-module";
+import { useCompany } from "@/components/provider/company-provider";
 
-interface Props {
-  companyId?: string;
-  enabled?: boolean;
-}
+export function useGetAssets() {
+  const { currentCompany } = useCompany();
+  const companyId = currentCompany?.id;
 
-export function useGetAssets({ companyId, enabled }: Props) {
   const query = useQuery({
     queryKey: ["assets", companyId],
     queryFn: async () => {
-      const { data } = await api.client.get<PaginatedApiResponse<Asset[]>>(
-        `/companies/${companyId}/assets`,
-      );
-      return data;
+      if (!companyId) throw new Error("companyId is required");
+      const { data, pagination } = await assetRepository.getAssets({
+        companyId,
+      });
+      return { data, pagination };
     },
-    enabled,
+    enabled: !!companyId,
   });
 
   return { query };

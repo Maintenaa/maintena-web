@@ -1,8 +1,6 @@
-import { PartCategory } from "@/modules/part/dto/part-category";
 import { useCompany } from "@/components/provider/company-provider";
-import { PaginatedApiResponse } from "@/modules/shared/dto/api_response";
-import { api } from "@/network/api";
 import { useQuery } from "@tanstack/react-query";
+import { partRepository } from "../../modules/part/part-module";
 
 export function useGetPartCategories() {
   const { currentCompany } = useCompany();
@@ -11,10 +9,9 @@ export function useGetPartCategories() {
   const query = useQuery({
     queryKey: ["part-categories", companyId],
     queryFn: async () => {
-      const { data } = await api.client.get<
-        PaginatedApiResponse<PartCategory[]>
-      >(`/companies/${companyId}/part-categories`);
-      return data;
+      if (!companyId) throw new Error("companyId is required");
+      const { data, pagination } = await partRepository.getPartCategories({ companyId });
+      return { data, pagination };
     },
     enabled: !!companyId,
   });

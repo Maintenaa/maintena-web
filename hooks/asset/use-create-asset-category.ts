@@ -1,8 +1,6 @@
 import { useCompany } from "@/components/provider/company-provider";
-import { ApiResponse } from "@/modules/shared/dto/api_response";
-import { api } from "@/network/api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { AssetCategory } from "../../../dto/asset/asset-category";
+import { assetRepository } from "../../modules/asset/asset-module";
 
 export function useCreateAssetCategory() {
   const { currentCompany } = useCompany();
@@ -11,11 +9,8 @@ export function useCreateAssetCategory() {
 
   const mutation = useMutation({
     mutationFn: async (name: string) => {
-      const { data } = await api.client.post<ApiResponse<AssetCategory>>(
-        `/companies/${companyId}/asset-categories`,
-        { name },
-      );
-      return data;
+      if (!companyId) throw new Error("companyId is required");
+      return assetRepository.createAssetCategory({ companyId, name });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
