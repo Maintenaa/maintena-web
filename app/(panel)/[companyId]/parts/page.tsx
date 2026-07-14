@@ -4,25 +4,33 @@ import PartList from "@/components/panel/part/part-list";
 import { AppFilter, AppFilterOther } from "@/components/app/app-filter";
 import { AlertConfirmDialog } from "@/components/app/confirm-dialog";
 import { PanelContentHeader } from "@/components/panel/panel-content";
+import { usePanelContext } from "@/components/panel/panel-provider";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Part } from "@/modules/part/dto/part";
 import { useGetPartFilter, useGetParts } from "@/hooks/part/use-get-parts";
+import { useDeletePart } from "@/hooks/part/use-delete-part";
+import { usePanelPath } from "@/lib/panels";
+import { toast } from "sonner";
+import { getErrorMessage } from "@/lib/utils";
 import {
   AudioLinesIcon,
   PlusIcon,
   TicketIcon,
   TicketSlashIcon,
 } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { StatsCard, StatsCardProps } from "@/components/panel/stats-card";
 import PartCategorySelect from "@/components/form/part-category-select";
 
 export default function Page() {
+  const { setBreadcrumbs } = usePanelContext();
+  const { panelUrl } = usePanelPath();
   const {
     query: { data: partsData },
   } = useGetParts();
+  const { mutation: deletePartMutation } = useDeletePart();
 
   const {
     page,
@@ -35,6 +43,10 @@ export default function Page() {
   } = useGetPartFilter();
 
   const [deletePart, setDeletePart] = useState<Part | null>(null);
+
+  useEffect(() => {
+    setBreadcrumbs([["Parts"]]);
+  }, []);
 
   const filteredData = useMemo(
     () =>
@@ -75,7 +87,7 @@ export default function Page() {
         title="Parts"
         action={
           <Button type="button" asChild>
-            <Link href="/parts/create">
+            <Link href={panelUrl("/parts/create")}>
               <PlusIcon className="size-4" />
               Create
             </Link>
@@ -127,7 +139,16 @@ export default function Page() {
             setDeletePart(null);
           }
         }}
-        onConfirm={() => {}}
+        onConfirm={async () => {
+          if (!deletePart) return;
+          try {
+            await deletePartMutation.mutateAsync(deletePart.id);
+            toast.success("Part deleted successfully");
+            setDeletePart(null);
+          } catch (err) {
+            toast.error(getErrorMessage(err));
+          }
+        }}
         confirmText="Delete"
         confirmVariant="destructive"
       />
