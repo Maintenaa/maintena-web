@@ -6,18 +6,19 @@ import { AlertConfirmDialog } from "@/components/app/confirm-dialog";
 import { PanelContentHeader } from "@/components/panel/panel-content";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { useCompany } from "@/components/provider/company-provider";
 import { Asset } from "@/modules/asset/dto/asset";
 import { useGetAssetFilter, useGetAssets } from "@/hooks/asset/use-get-assets";
+import { useDeleteAsset } from "@/hooks/asset/use-delete-asset";
 import { PlusIcon } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { usePanelContext } from "@/components/panel/panel-provider";
 import AssetCategorySelect from "@/components/form/asset-category-select";
+import { toast } from "sonner";
+import { getErrorMessage } from "@/lib/utils";
 
 export default function Page() {
   const { setBreadcrumbs } = usePanelContext();
-  const { currentCompany } = useCompany();
 
   useEffect(() => {
     setBreadcrumbs([["Assets"]]);
@@ -25,10 +26,7 @@ export default function Page() {
 
   const {
     query: { data: assetsData },
-  } = useGetAssets({
-    companyId: currentCompany?.id,
-    enabled: !!currentCompany,
-  });
+  } = useGetAssets();
 
   const {
     page,
@@ -41,6 +39,7 @@ export default function Page() {
   } = useGetAssetFilter();
 
   const [deleteAsset, setDeleteAsset] = useState<Asset | null>(null);
+  const { mutation: deleteAssetMutation } = useDeleteAsset();
 
   const filteredData = useMemo(
     () =>
@@ -104,7 +103,16 @@ export default function Page() {
             setDeleteAsset(null);
           }
         }}
-        onConfirm={() => {}}
+        onConfirm={async () => {
+          if (!deleteAsset) return;
+          try {
+            await deleteAssetMutation.mutateAsync(deleteAsset.id);
+            toast.success("Asset deleted successfully");
+            setDeleteAsset(null);
+          } catch (err) {
+            toast.error(getErrorMessage(err));
+          }
+        }}
         confirmText="Delete"
         confirmVariant="destructive"
       />

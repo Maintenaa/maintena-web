@@ -5,6 +5,7 @@ import { AssetCategory } from "../dto/asset-category";
 import { CreateAssetCategoryRequest } from "../dto/create-asset-category";
 import { CreateAssetRequest } from "../dto/create-asset";
 import { DeleteAssetCategoryRequest } from "../dto/delete-asset-category";
+import { DeleteAssetRequest } from "../dto/delete-asset";
 import { GetAssetCategoriesRequest } from "../dto/get-asset-categories";
 import { GetAssetByIdRequest } from "../dto/get-asset-by-id";
 import { GetAssetsRequest } from "../dto/get-assets";
@@ -100,6 +101,13 @@ export class AssetRepository {
         specifications: req.specifications,
         photo: req.photo,
       },
+    );
+    return data;
+  }
+
+  async deleteAsset(req: DeleteAssetRequest) {
+    const { data } = await api.client.delete(
+      `/companies/${req.companyId}/assets/${req.assetId}`,
     );
     return data;
   }

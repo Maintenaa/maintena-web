@@ -6,7 +6,6 @@ import { AlertConfirmDialog } from "@/components/app/confirm-dialog";
 import { PanelContentHeader } from "@/components/panel/panel-content";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { useCompany } from "@/components/provider/company-provider";
 import { Part } from "@/modules/part/dto/part";
 import { useGetPartFilter, useGetParts } from "@/hooks/part/use-get-parts";
 import {
@@ -21,14 +20,9 @@ import { StatsCard, StatsCardProps } from "@/components/panel/stats-card";
 import PartCategorySelect from "@/components/form/part-category-select";
 
 export default function Page() {
-  const { currentCompany } = useCompany();
-
   const {
     query: { data: partsData },
-  } = useGetParts({
-    companyId: currentCompany?.id,
-    enabled: !!currentCompany,
-  });
+  } = useGetParts();
 
   const {
     page,

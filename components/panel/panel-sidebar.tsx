@@ -24,12 +24,14 @@ import { CompanySwitcher } from "./company-switcher";
 import { useCompany } from "@/components/provider/company-provider";
 import { useMemo } from "react";
 import { usePanelPath } from "@/lib/panels";
+import { usePathname } from "next/navigation";
 
 export function PanelSidebar({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
   const { panelUrl, isPanelPathActive } = usePanelPath();
   const { currentCompany } = useCompany();
+  const pathname = usePathname();
 
   const match = (exp: string) => isPanelPathActive(exp);
 
@@ -141,7 +143,7 @@ export function PanelSidebar({
         ],
       },
     ];
-  }, [currentCompany, panelUrl]);
+  }, [currentCompany, panelUrl, pathname]);
 
   return (
     <Sidebar collapsible="icon" {...props}>
