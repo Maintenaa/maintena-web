@@ -6,20 +6,22 @@ import { AlertConfirmDialog } from "@/components/app/confirm-dialog";
 import { PanelContentHeader } from "@/components/panel/panel-content";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { useCompany } from "@/modules/company/context/company-context";
+import { useCompany } from "@/components/provider/company-provider";
 import { Asset } from "@/modules/asset/dto/asset";
-import {
-  useGetAssetFilter,
-  useGetAssets,
-} from "@/modules/asset/hook/use-get-assets";
-import { useGetAssetCategories } from "@/modules/asset/hook/use-get-asset-categories";
+import { useGetAssetFilter, useGetAssets } from "@/hooks/asset/use-get-assets";
 import { PlusIcon } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import AssetCategorySelect from "@/components/app/asset-category-select";
+import { usePanelContext } from "@/components/panel/panel-provider";
 
 export default function Page() {
+  const { setBreadcrumbs } = usePanelContext();
   const { currentCompany } = useCompany();
+
+  useEffect(() => {
+    setBreadcrumbs([["Assets"]]);
+  }, []);
 
   const {
     query: { data: assetsData },
@@ -56,7 +58,7 @@ export default function Page() {
         title="Assets"
         action={
           <Button type="button" asChild>
-            <Link href="/assets/create">
+            <Link href="./assets/create">
               <PlusIcon className="size-4" />
               Create
             </Link>

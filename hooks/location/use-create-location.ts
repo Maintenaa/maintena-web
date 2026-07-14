@@ -1,4 +1,4 @@
-import { useCompany } from "@/modules/company/context/company-context";
+import { useCompany } from "@/components/provider/company-provider";
 import { api } from "@/network/api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 

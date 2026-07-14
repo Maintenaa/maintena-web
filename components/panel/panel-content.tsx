@@ -4,7 +4,7 @@ import { Separator } from "../ui/separator";
 import { SidebarTrigger } from "../ui/sidebar";
 import NavBreadcrumb, { BreadcrumbItem } from "../nav-breadcrumb";
 import { ThemeToggler } from "../theme-toggler";
-import { useCompany } from "@/modules/company/context/company-context";
+import { useCompany } from "@/components/provider/company-provider";
 
 interface Props {
   children: React.ReactNode;

@@ -1,6 +1,6 @@
 "use client";
 
-import { useGetAssetCategories } from "@/modules/asset/hook/use-get-asset-categories";
+import { useGetAssetCategories } from "@/hooks/asset/use-get-asset-categories";
 import {
   Command,
   CommandGroup,
@@ -26,12 +26,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../ui/dialog";
-import { useCreateAssetCategory } from "@/modules/asset/hook/use-create-asset-category";
+import { useCreateAssetCategory } from "@/hooks/asset/use-create-asset-category";
 import { toast } from "sonner";
 import { getErrorMessage } from "@/lib/utils";
 import { AlertConfirmDialog } from "./confirm-dialog";
-import { useDeleteAssetCategory } from "@/modules/asset/hook/use-delete-asset-category";
-import { useUpdateAssetCategory } from "@/modules/asset/hook/use-update-asset-category";
+import { useDeleteAssetCategory } from "@/hooks/asset/use-delete-asset-category";
+import { useUpdateAssetCategory } from "@/hooks/asset/use-update-asset-category";
 
 export interface AssetCategorySelectProps {
   value?: AssetCategory | null;

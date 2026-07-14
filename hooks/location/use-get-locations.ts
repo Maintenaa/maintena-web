@@ -1,31 +1,30 @@
-import { Part } from "@/modules/part/dto/part";
+import { useCompany } from "@/components/provider/company-provider";
+import { Location } from "@/modules/location/dto/location";
 import { PaginatedApiResponse } from "@/modules/shared/dto/api_response";
-import { useDebouncedState } from "@/modules/shared/hook/use-debounced-state";
+import { useDebouncedState } from "@/hooks/use-debounced-state";
 import { api } from "@/network/api";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 
-interface Props {
-  companyId?: string;
-  enabled?: boolean;
-}
+export function useGetLocations() {
+  const { currentCompany } = useCompany();
+  const companyId = currentCompany?.id;
 
-export function useGetParts({ companyId, enabled }: Props) {
   const query = useQuery({
-    queryKey: ["parts", companyId],
+    queryKey: ["locations", companyId],
     queryFn: async () => {
-      const { data } = await api.client.get<PaginatedApiResponse<Part[]>>(
-        `/companies/${companyId}/parts`,
+      const { data } = await api.client.get<PaginatedApiResponse<Location[]>>(
+        `/companies/${companyId}/locations`,
       );
       return data;
     },
-    enabled,
+    enabled: !!companyId,
   });
 
   return { query };
 }
 
-export function useGetPartFilter() {
+export function useGetLocationFilter() {
   const [search, setSearch] = useState<string>();
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(10);

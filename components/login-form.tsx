@@ -11,7 +11,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useQueryClient } from "@tanstack/react-query";
-import { useLogin } from "@/modules/auth/hooks/use-login";
+import { useLogin } from "@/hooks/auth/use-login";
 
 export function LoginForm({
   className,

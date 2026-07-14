@@ -1,25 +1,25 @@
-import { useCompany } from "@/modules/company/context/company-context";
+import { useCompany } from "@/components/provider/company-provider";
 import { ApiResponse } from "@/modules/shared/dto/api_response";
 import { api } from "@/network/api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { PartCategory } from "../dto/part-category";
+import { AssetCategory } from "../../../dto/asset/asset-category";
 
-export function useCreatePartCategory() {
+export function useCreateAssetCategory() {
   const { currentCompany } = useCompany();
   const companyId = currentCompany?.id;
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
     mutationFn: async (name: string) => {
-      const { data } = await api.client.post<ApiResponse<PartCategory>>(
-        `/companies/${companyId}/part-categories`,
+      const { data } = await api.client.post<ApiResponse<AssetCategory>>(
+        `/companies/${companyId}/asset-categories`,
         { name },
       );
       return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["part-categories", companyId],
+        queryKey: ["asset-categories", companyId],
       });
     },
   });

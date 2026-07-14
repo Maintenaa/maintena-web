@@ -12,7 +12,7 @@ import {
 import { Asset } from "@/modules/asset/dto/asset";
 import { PenIcon, Trash2Icon } from "lucide-react";
 import AppPaginator from "@/components/app/app-paginator";
-import { StatusBadge, PriorityBadge } from "@/components/app/status-badge";
+import { StatusBadge } from "@/components/app/status-badge";
 import { usePanelPath } from "@/lib/panels";
 
 export interface AssetListProps {
@@ -66,10 +66,6 @@ export default function AssetList({
       columnHelper.accessor("status", {
         header: "Status",
         cell: (info) => <StatusBadge value={info.getValue()} />,
-      }),
-      columnHelper.accessor("priority", {
-        header: "Priority",
-        cell: (info) => <PriorityBadge value={info.getValue()} />,
       }),
       columnHelper.accessor("manufacturer", {
         header: "Manufacturer",

@@ -1,9 +1,9 @@
+import DefaultPanelLayout from "@/components/panel/panel-layout";
 import { getMetaTitle } from "@/lib/metas";
 import { Metadata } from "next";
-import DefaultPanelLayout from "../assets/layout";
 
 export const metadata: Metadata = {
-  title: getMetaTitle("Locations"),
+  title: getMetaTitle("Create Asset"),
 };
 
 export default DefaultPanelLayout;

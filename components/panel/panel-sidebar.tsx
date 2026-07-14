@@ -21,19 +21,17 @@ import {
   BotIcon,
 } from "lucide-react";
 import { CompanySwitcher } from "./company-switcher";
-import { useCompany } from "@/modules/company/context/company-context";
+import { useCompany } from "@/components/provider/company-provider";
 import { useMemo } from "react";
-import { usePathname } from "next/navigation";
 import { usePanelPath } from "@/lib/panels";
 
 export function PanelSidebar({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
   const { panelUrl, isPanelPathActive } = usePanelPath();
-  const path = usePathname();
   const { currentCompany } = useCompany();
 
-  const match = (exp: string) => isPanelPathActive(path, exp);
+  const match = (exp: string) => isPanelPathActive(exp);
 
   const navs = useMemo<NavMainGroup[]>(() => {
     if (!currentCompany) return [];
@@ -143,7 +141,7 @@ export function PanelSidebar({
         ],
       },
     ];
-  }, [currentCompany, path, panelUrl]);
+  }, [currentCompany, panelUrl]);
 
   return (
     <Sidebar collapsible="icon" {...props}>

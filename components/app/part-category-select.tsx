@@ -1,6 +1,6 @@
 "use client";
 
-import { useGetPartCategories } from "@/modules/part/hook/use-get-part-categories";
+import { useGetPartCategories } from "@/hooks/part/use-get-part-categories";
 import {
   Command,
   CommandGroup,
@@ -26,12 +26,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../ui/dialog";
-import { useCreatePartCategory } from "@/modules/part/hook/use-create-part-category";
+import { useCreatePartCategory } from "@/hooks/part/use-create-part-category";
 import { toast } from "sonner";
 import { getErrorMessage } from "@/lib/utils";
 import { AlertConfirmDialog } from "./confirm-dialog";
-import { useDeletePartCategory } from "@/modules/part/hook/use-delete-part-category";
-import { useUpdatePartCategory } from "@/modules/part/hook/use-update-part-category";
+import { useDeletePartCategory } from "@/hooks/part/use-delete-part-category";
+import { useUpdatePartCategory } from "@/hooks/part/use-update-part-category";
 
 export interface PartCategorySelectProps {
   value?: PartCategory | null;
@@ -53,9 +53,7 @@ export default function PartCategorySelect({
 
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
-  const [value, setValue] = useState<PartCategory | null>(
-    initialValue || null,
-  );
+  const [value, setValue] = useState<PartCategory | null>(initialValue || null);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect

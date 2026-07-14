@@ -5,8 +5,6 @@ export type AssetStatus =
   | "outOfService"
   | "decommissioned";
 
-export type AssetPriority = "low" | "medium" | "high" | "critical";
-
 export interface Asset {
   id: string;
   code: string;
@@ -16,7 +14,6 @@ export interface Asset {
   categoryId: string;
   locationId: string;
   status: AssetStatus;
-  priority: AssetPriority;
   lastMaintenanceAt: string;
   installationDate: string;
   expirationDate: string;

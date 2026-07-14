@@ -1,7 +1,7 @@
-import { useDebouncedState } from "@/modules/shared/hook/use-debounced-state";
+import { useDebouncedState } from "@/hooks/use-debounced-state";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { companyRepository } from "../company-module";
+import { companyRepository } from "../../modules/company/company-module";
 
 export function useGetCompanies() {
   const [q, setQ] = useState<string | undefined>(undefined);

@@ -1,17 +1,28 @@
 "use client";
 
-import { AuthContext } from "@/modules/auth/context/auth-context";
-import { useGetProfile } from "@/modules/auth/hooks/use-get-profile";
+import { useGetProfile } from "@/hooks/auth/use-get-profile";
 import { User } from "@/modules/user/dto/user";
 import { Loader2Icon } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { createContext, useContext } from "react";
 
 interface Props {
   children: React.ReactNode;
 }
 
 const authRouteRegex = /^\/(login|register|forgot-password)*/gi;
+
+interface AuthContext {
+  user?: User | null;
+  setUser: (user: User | undefined | null) => void;
+}
+
+export const AuthContext = createContext({} as AuthContext);
+
+export function useAuth() {
+  return useContext(AuthContext);
+}
 
 export default function AuthProvider({ children }: Props) {
   const [user, setUser] = useState<User | null | undefined>(null);

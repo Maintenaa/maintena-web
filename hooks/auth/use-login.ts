@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
-import { authRepository } from "../auth-module";
-import { LoginParams } from "../dto/login";
+import { authRepository } from "../../modules/auth/auth-module";
+import { LoginParams } from "../../modules/auth/dto/login";
 import { api } from "@/network/api";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";

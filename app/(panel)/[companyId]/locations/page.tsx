@@ -8,20 +8,26 @@ import { PanelContentHeader } from "@/components/panel/panel-content";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Location } from "@/modules/location/dto/location";
-import { useCreateLocation } from "@/modules/location/hook/use-create-location";
-import { useDeleteLocation } from "@/modules/location/hook/use-delete-location";
-import { useUpdateLocation } from "@/modules/location/hook/use-update-location";
+import { useCreateLocation } from "@/hooks/location/use-create-location";
+import { useDeleteLocation } from "@/hooks/location/use-delete-location";
+import { useUpdateLocation } from "@/hooks/location/use-update-location";
 import {
   useGetLocationFilter,
   useGetLocations,
-} from "@/modules/location/hook/use-get-locations";
+} from "@/hooks/location/use-get-locations";
 import { PlusIcon } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { usePanelContext } from "@/components/panel/panel-provider";
 
 export default function Page() {
+  const { setBreadcrumbs } = usePanelContext();
   const {
     query: { data: locationsData },
   } = useGetLocations();
+
+  useEffect(() => {
+    setBreadcrumbs([["Locations"]]);
+  }, []);
 
   const {
     page,

@@ -23,7 +23,7 @@ import {
   GlobeIcon,
   PlusIcon,
 } from "lucide-react";
-import { useCompany } from "@/modules/company/context/company-context";
+import { useCompany } from "@/components/provider/company-provider";
 
 export function CompanySwitcher() {
   const { isMobile } = useSidebar();

@@ -1,22 +1,21 @@
-import { useCompany } from "@/modules/company/context/company-context";
+import { useCompany } from "@/components/provider/company-provider";
 import { api } from "@/network/api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-export function useDeleteLocation() {
+export function useDeleteAssetCategory() {
   const { currentCompany } = useCompany();
   const companyId = currentCompany?.id;
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
-    mutationKey: ["delete-location", companyId],
-    mutationFn: async (id: string) => {
+    mutationFn: async (categoryId: string) => {
       const { data } = await api.client.delete(
-        `/companies/${companyId}/locations/${id}`,
+        `/companies/${companyId}/asset-categories/${categoryId}`
       );
       return data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["locations", companyId] });
+      queryClient.invalidateQueries({ queryKey: ["asset-categories", companyId] });
     },
   });
 

@@ -1,13 +1,26 @@
 "use client";
 
-import { CompanyContext } from "@/modules/company/context/company-context";
 import { Company } from "@/modules/company/dto/company";
-import { useGetCompanies } from "@/modules/company/hooks/use-get-companies";
-import { useGetCompanyById } from "@/modules/company/hooks/use-get-company-by-id";
+import { useGetCompanies } from "@/hooks/company/use-get-companies";
+import { useGetCompanyById } from "@/hooks/company/use-get-company-by-id";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
 const companyIdKey = "company-id";
+
+interface CompanyContext {
+  companies: Company[];
+  setCompanies: (companies: Company[]) => void;
+  currentCompany?: Company | null;
+  setCurrentCompany: (company: Company | null) => void;
+  isLoading?: boolean;
+}
+
+export const CompanyContext = createContext({} as CompanyContext);
+
+export function useCompany() {
+  return useContext(CompanyContext);
+}
 
 export default function CompanyProvider({
   children,

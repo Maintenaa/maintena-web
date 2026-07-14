@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { authRepository } from "../auth-module";
+import { authRepository } from "../../modules/auth/auth-module";
 
 export function useGetProfile() {
   const query = useQuery({

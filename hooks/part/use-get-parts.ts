@@ -1,6 +1,6 @@
-import { Asset } from "@/modules/asset/dto/asset";
+import { Part } from "@/modules/part/dto/part";
 import { PaginatedApiResponse } from "@/modules/shared/dto/api_response";
-import { useDebouncedState } from "@/modules/shared/hook/use-debounced-state";
+import { useDebouncedState } from "@/hooks/use-debounced-state";
 import { api } from "@/network/api";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
@@ -10,12 +10,12 @@ interface Props {
   enabled?: boolean;
 }
 
-export function useGetAssets({ companyId, enabled }: Props) {
+export function useGetParts({ companyId, enabled }: Props) {
   const query = useQuery({
-    queryKey: ["assets", companyId],
+    queryKey: ["parts", companyId],
     queryFn: async () => {
-      const { data } = await api.client.get<PaginatedApiResponse<Asset[]>>(
-        `/companies/${companyId}/assets`,
+      const { data } = await api.client.get<PaginatedApiResponse<Part[]>>(
+        `/companies/${companyId}/parts`,
       );
       return data;
     },
@@ -25,7 +25,7 @@ export function useGetAssets({ companyId, enabled }: Props) {
   return { query };
 }
 
-export function useGetAssetFilter() {
+export function useGetPartFilter() {
   const [search, setSearch] = useState<string>();
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(10);

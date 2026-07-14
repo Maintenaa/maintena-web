@@ -1,21 +1,22 @@
-import { useCompany } from "@/modules/company/context/company-context";
+import { useCompany } from "@/components/provider/company-provider";
 import { api } from "@/network/api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-export function useDeletePartCategory() {
+export function useDeleteLocation() {
   const { currentCompany } = useCompany();
   const companyId = currentCompany?.id;
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
-    mutationFn: async (categoryId: string) => {
+    mutationKey: ["delete-location", companyId],
+    mutationFn: async (id: string) => {
       const { data } = await api.client.delete(
-        `/companies/${companyId}/part-categories/${categoryId}`
+        `/companies/${companyId}/locations/${id}`,
       );
       return data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["part-categories", companyId] });
+      queryClient.invalidateQueries({ queryKey: ["locations", companyId] });
     },
   });
 

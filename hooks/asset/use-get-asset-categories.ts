@@ -1,5 +1,5 @@
 import { AssetCategory } from "@/modules/asset/dto/asset-category";
-import { useCompany } from "@/modules/company/context/company-context";
+import { useCompany } from "@/components/provider/company-provider";
 import { PaginatedApiResponse } from "@/modules/shared/dto/api_response";
 import { api } from "@/network/api";
 import { useQuery } from "@tanstack/react-query";

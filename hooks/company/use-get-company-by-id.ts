@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { companyRepository } from "../company-module";
+import { companyRepository } from "../../modules/company/company-module";
 
 export function useGetCompanyById(companyId?: string | null) {
   const query = useQuery({
