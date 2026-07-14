@@ -152,8 +152,7 @@ export default function PartCategorySelect({
             variant="outline"
             className="justify-start w-full"
           >
-            <SearchIcon className="size-4" />
-            Select Category
+            {value?.name || "Select Category"}
           </Button>
         </DialogTrigger>
         <DialogContent className="max-w-sm">
@@ -202,9 +201,13 @@ export default function PartCategorySelect({
                         "w-full flex items-center justify-between group gap-2",
                         value?.id == category.id ? "bg-primary/10" : "",
                       ].join(" ")}
-                      onSelect={() => handleSelectCategory(category)}
                     >
-                      <div className="flex-1 min-w-0">{category.name}</div>
+                      <div
+                        onClick={() => handleSelectCategory(category)}
+                        className="flex-1 min-w-0 h-full"
+                      >
+                        {category.name}
+                      </div>
                       <div className="flex items-center gap-2 order-last text-muted-foreground">
                         <div className="flex items-center gap-2 opacity-0 transition group-hover:opacity-100">
                           <button

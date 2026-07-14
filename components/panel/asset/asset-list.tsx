@@ -1,5 +1,3 @@
-"use client";
-
 import { AppTable, AppTableActions } from "@/components/app/app-table";
 import { useEffect, useMemo, useState } from "react";
 import {
@@ -110,7 +108,7 @@ export default function AssetList({
         },
       }),
     ];
-  }, []);
+  }, [panelUrl]);
 
   const table = useReactTable({
     columns,

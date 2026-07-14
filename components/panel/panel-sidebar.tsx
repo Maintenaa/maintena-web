@@ -104,7 +104,7 @@ export function PanelSidebar({
                 isActive: match("/work-orders"),
               },
               {
-                title: "Create Work Order",
+                title: "Request Work Order",
                 url: panelUrl("/work-orders/create"),
                 isActive: match("/work-orders/create"),
               },

@@ -1,3 +1,6 @@
+import { Location } from "@/modules/location/dto/location";
+import { AssetCategory } from "./asset-category";
+
 export type AssetStatus =
   | "operational"
   | "inMaintenance"
@@ -12,7 +15,9 @@ export interface Asset {
   description: string;
   companyId: string;
   categoryId: string;
+  category?: AssetCategory;
   locationId: string;
+  location?: Location;
   status: AssetStatus;
   lastMaintenanceAt: string;
   installationDate: string;
