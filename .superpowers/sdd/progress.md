@@ -10,5 +10,5 @@
 | Task 4: Create Position Select Component | complete | ec52d11 | verified |
 | Task 5: Create Employee Form Component | complete | f8431a1 | verified |
 | Task 6: Create Employee List Component | complete | cb14ea7 | verified |
-| Task 7: Create Employee Routes | pending | - | - |
+| Task 7: Create Employee Routes | complete | a353553 | verified |
 | Task 8: Final Verification | pending | - | - |

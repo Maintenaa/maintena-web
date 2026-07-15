@@ -162,7 +162,7 @@ export default function EmployeeForm({ employee }: Props) {
               render={() => (
                 <PositionSelect
                   value={selectedPosition}
-                  onValueChange={setSelectedPosition}
+                  onValueChange={(value) => setSelectedPosition(value ?? null)}
                 />
               )}
             />
