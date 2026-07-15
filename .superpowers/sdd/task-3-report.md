@@ -1,9 +1,0 @@
-- Status: DONE
-- Files created:
-  - hooks/employee/use-get-employees.ts
-  - hooks/employee/use-get-employee-by-user-id.ts
-  - hooks/employee/use-create-employee.ts
-  - hooks/employee/use-update-employee.ts
-  - hooks/employee/use-delete-employee.ts
-- Commit: acd7bd6
-- Concerns: none

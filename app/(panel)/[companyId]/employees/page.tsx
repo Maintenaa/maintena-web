@@ -7,7 +7,10 @@ import { usePanelContext } from "@/components/panel/panel-provider";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Employee } from "@/modules/employee/dto/employee";
-import { useGetEmployees } from "@/hooks/employee/use-get-employees";
+import {
+  useGetEmployees,
+  useGetEmployeesFilter,
+} from "@/hooks/employee/use-get-employees";
 import { useDeleteEmployee } from "@/hooks/employee/use-delete-employee";
 import { usePanelPath } from "@/lib/panels";
 import { toast } from "sonner";
@@ -15,6 +18,7 @@ import { getErrorMessage } from "@/lib/utils";
 import { PlusIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { AppFilter } from "@/components/app/app-filter";
 
 export default function Page() {
   const { setBreadcrumbs } = usePanelContext();
@@ -22,6 +26,7 @@ export default function Page() {
   const {
     query: { data: employeesData },
   } = useGetEmployees();
+  const { search, setSearch, perPage, setPerPage } = useGetEmployeesFilter();
   const { mutation: deleteEmployeeMutation } = useDeleteEmployee();
 
   const [deleteEmployee, setDeleteEmployee] = useState<Employee | null>(null);
@@ -47,6 +52,14 @@ export default function Page() {
       <Card>
         <CardContent>
           <div className="space-y-4">
+            <AppFilter
+              search={search}
+              setSearch={setSearch}
+              searchPlaceholder="Search employee..."
+              perPage={perPage}
+              setPerPage={setPerPage}
+            />
+
             <EmployeeList
               data={employeesData?.data || []}
               onDelete={(data) => {
